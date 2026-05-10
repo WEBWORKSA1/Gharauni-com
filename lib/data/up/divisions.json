@@ -1,0 +1,92 @@
+[
+  {
+    "code": "AGR",
+    "name": "Agra",
+    "nameHi": "आगरा"
+  },
+  {
+    "code": "ALG",
+    "name": "Aligarh",
+    "nameHi": "अलीगढ़"
+  },
+  {
+    "code": "AYO",
+    "name": "Ayodhya",
+    "nameHi": "अयोध्या"
+  },
+  {
+    "code": "AZG",
+    "name": "Azamgarh",
+    "nameHi": "आजमगढ़"
+  },
+  {
+    "code": "BSI",
+    "name": "Basti",
+    "nameHi": "बस्ती"
+  },
+  {
+    "code": "BAR",
+    "name": "Bareilly",
+    "nameHi": "बरेली"
+  },
+  {
+    "code": "CHK",
+    "name": "Chitrakoot",
+    "nameHi": "चित्रकूट"
+  },
+  {
+    "code": "DEV",
+    "name": "Devipatan",
+    "nameHi": "देवीपाटन"
+  },
+  {
+    "code": "GOR",
+    "name": "Gorakhpur",
+    "nameHi": "गोरखपुर"
+  },
+  {
+    "code": "JHA",
+    "name": "Jhansi",
+    "nameHi": "झाँसी"
+  },
+  {
+    "code": "KAN",
+    "name": "Kanpur",
+    "nameHi": "कानपुर"
+  },
+  {
+    "code": "LKO",
+    "name": "Lucknow",
+    "nameHi": "लखनऊ"
+  },
+  {
+    "code": "MRT",
+    "name": "Meerut",
+    "nameHi": "मेरठ"
+  },
+  {
+    "code": "MZP",
+    "name": "Mirzapur",
+    "nameHi": "मिर्ज़ापुर"
+  },
+  {
+    "code": "MOR",
+    "name": "Moradabad",
+    "nameHi": "मुरादाबाद"
+  },
+  {
+    "code": "PRY",
+    "name": "Prayagraj",
+    "nameHi": "प्रयागराज"
+  },
+  {
+    "code": "SHR",
+    "name": "Saharanpur",
+    "nameHi": "सहारनपुर"
+  },
+  {
+    "code": "VNS",
+    "name": "Varanasi",
+    "nameHi": "वाराणसी"
+  }
+]
