@@ -6,7 +6,7 @@ export function Footer() {
   return (
     <footer className="bg-ink-900 text-ivory-50 pt-16 px-6 pb-8">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-10">
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
               <Seal />
@@ -16,37 +16,38 @@ export function Footer() {
               India’s first dedicated platform for SVAMITVA cardholders.
             </p>
           </div>
-
           <div>
             <div className="font-semibold mb-3 text-ivory-50">Services</div>
-            {[
-              { l: 'Loan Comparison', h: ROUTES.loan },
-              { l: 'Status Check', h: ROUTES.check },
-              { l: 'Title Verification', h: ROUTES.title },
-              { l: 'Marketplace', h: ROUTES.market },
-              { l: 'Insurance', h: ROUTES.insurance }
-            ].map(s =>
-              <Link key={s.l} href={s.h} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">{s.l}</Link>
-            )}
+            <Link href={ROUTES.loan} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Loan Comparison</Link>
+            <Link href={ROUTES.check} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Status Check</Link>
+            <Link href={ROUTES.title} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Title Verification</Link>
+            <Link href={ROUTES.market} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Marketplace</Link>
+            <Link href={ROUTES.insurance} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Insurance</Link>
           </div>
-
+          <div>
+            <div className="font-semibold mb-3 text-ivory-50">Company</div>
+            <Link href="/about" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">About</Link>
+            <Link href="/contact" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Contact</Link>
+            <Link href={ROUTES.parser} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Developer API</Link>
+            <Link href={ROUTES.learn} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Learn</Link>
+            <a href="mailto:partners@gharauni.com" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Partnerships</a>
+          </div>
+          <div>
+            <div className="font-semibold mb-3 text-ivory-50">Legal</div>
+            <Link href="/privacy" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Privacy Policy</Link>
+            <Link href="/terms" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Terms of Service</Link>
+            <a href="mailto:legal@gharauni.com" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Legal contact</a>
+            <div className="py-1.5 text-ink-400 text-xs mt-3">DPDP Act 2023 compliant</div>
+          </div>
           <div>
             <div className="font-semibold mb-3 text-ivory-50">Languages</div>
             {['हिंदी', 'English', 'मराठी', 'తెలుగు', 'भोजपुरी'].map(s =>
               <div key={s} className="py-1.5 text-ink-400 text-sm">{s}</div>)}
           </div>
-
-          <div>
-            <div className="font-semibold mb-3 text-ivory-50">Trust</div>
-            <div className="py-1.5 text-ink-400 text-sm">SVAMITVA-aligned data</div>
-            <div className="py-1.5 text-ink-400 text-sm">RBI partner-lender ecosystem</div>
-            <div className="py-1.5 text-ink-400 text-sm">SSL · Aadhaar e-KYC</div>
-          </div>
         </div>
-
         <div className="border-t border-ink-800 pt-6 flex justify-between flex-wrap gap-3 text-[13px] text-ink-400">
-          <div>© 2026 Gharauni.com · India’s Largest Rural Property Platform</div>
-          <div className="mono">Not affiliated with Govt of India · Aggregator platform</div>
+          <div>© 2026 Gharauni.com · A WebWorks venture</div>
+          <div className="mono">Not affiliated with Govt of India · Independent aggregator</div>
         </div>
       </div>
     </footer>
