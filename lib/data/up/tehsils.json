@@ -1,0 +1,198 @@
+[
+  {
+    "name": "Meerut",
+    "nameHi": "मेरठ",
+    "districtSlug": "meerut",
+    "district": "Meerut",
+    "districtCode": "09-09"
+  },
+  {
+    "name": "Mawana",
+    "nameHi": "मवाना",
+    "districtSlug": "meerut",
+    "district": "Meerut",
+    "districtCode": "09-09"
+  },
+  {
+    "name": "Sardhana",
+    "nameHi": "सरधना",
+    "districtSlug": "meerut",
+    "district": "Meerut",
+    "districtCode": "09-09"
+  },
+  {
+    "name": "Lucknow",
+    "nameHi": "लखनऊ",
+    "districtSlug": "lucknow",
+    "district": "Lucknow",
+    "districtCode": "09-31"
+  },
+  {
+    "name": "Mohanlalganj",
+    "nameHi": "मोहनलालगंज",
+    "districtSlug": "lucknow",
+    "district": "Lucknow",
+    "districtCode": "09-31"
+  },
+  {
+    "name": "Malihabad",
+    "nameHi": "मलिहाबाद",
+    "districtSlug": "lucknow",
+    "district": "Lucknow",
+    "districtCode": "09-31"
+  },
+  {
+    "name": "Bakshi Ka Talab",
+    "nameHi": "बक्शी का तालाब",
+    "districtSlug": "lucknow",
+    "district": "Lucknow",
+    "districtCode": "09-31"
+  },
+  {
+    "name": "Gorakhpur Sadar",
+    "nameHi": "गोरखपुर सदर",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Sahjanwa",
+    "nameHi": "सहजनवा",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Khajni",
+    "nameHi": "खजनी",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Bansgaon",
+    "nameHi": "बांसगांव",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Chauri Chaura",
+    "nameHi": "चौरी चौरा",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Gola",
+    "nameHi": "गोला",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Campierganj",
+    "nameHi": "कैम्पियरगंज",
+    "districtSlug": "gorakhpur",
+    "district": "Gorakhpur",
+    "districtCode": "09-51"
+  },
+  {
+    "name": "Sadar",
+    "nameHi": "सदर",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Bilhaur",
+    "nameHi": "बिल्हौर",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Ghatampur",
+    "nameHi": "घाटमपुर",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Narwal",
+    "nameHi": "नरवल",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Kanpur Sadar (City)",
+    "nameHi": "कानपुर सदर (शहर)",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Akbarpur Maati (Adjunct)",
+    "nameHi": "अकबरपुर माटी",
+    "districtSlug": "kanpur-nagar",
+    "district": "Kanpur Nagar",
+    "districtCode": "09-38"
+  },
+  {
+    "name": "Sadar",
+    "nameHi": "सदर",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Bara",
+    "nameHi": "बारा",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Handia",
+    "nameHi": "हण्डिया",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Karchhana",
+    "nameHi": "करछना",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Koraon",
+    "nameHi": "कोरांव",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Meja",
+    "nameHi": "मेजा",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Phulpur",
+    "nameHi": "फूलपुर",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  },
+  {
+    "name": "Soraon",
+    "nameHi": "सोरांव",
+    "districtSlug": "prayagraj",
+    "district": "Prayagraj",
+    "districtCode": "09-65"
+  }
+]
