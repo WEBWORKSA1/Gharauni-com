@@ -1,0 +1,19 @@
+{
+  "name": "gharauni-worker",
+  "version": "0.1.0",
+  "description": "External Gharauni scraper worker — deploy to VPS, not Vercel",
+  "type": "module",
+  "main": "worker.js",
+  "scripts": {
+    "start": "node worker.js",
+    "dev": "node --watch worker.js",
+    "setup": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright-extra": "^4.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
