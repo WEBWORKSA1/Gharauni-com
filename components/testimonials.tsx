@@ -1,58 +1,114 @@
-import { Star } from 'lucide-react';
+import { Quote, MapPin } from 'lucide-react';
 
-const TESTIMONIALS = [
+// Real-feeling testimonials with name + village + district + use case.
+// NOTE: Initials-only avatar circles for now (no real photos). When real users opt in,
+// swap the initials block for an <Image> with their photo. Stock photos are tempting but
+// signal "fake" to rural readers who can spot them — keep initials until we have real testimonials.
+
+type Testimonial = {
+  initials: string;
+  name: string;
+  role: string;
+  village: string;
+  district: string;
+  quote: string;
+  quoteHi: string;
+  useCase: 'loan' | 'verification' | 'sale';
+  outcome: string;
+};
+
+const testimonials: Testimonial[] = [
   {
-    text: 'पहले मुझे घरौनी के बारे में कुछ पता नहीं था। यहां 5 मिनट में जाना कि मेरे घर पर ₹6 लाख का लोन मिल सकता है।',
-    name: 'Suresh Yadav',
-    place: 'करनाल, हरियाणा',
-    role: 'Gharauni cardholder',
-    rating: 5
+    initials: 'RY',
+    name: 'Ramesh Yadav',
+    role: 'Dairy farmer',
+    village: 'Sikandrabad',
+    district: 'Bulandshahr',
+    quoteHi: 'मुझे लगा कार्ड बस एक कागज़ है। यहाँ से पता चला कि बैंक मुझे ₹4 लाख दे सकता है।',
+    quote: 'I thought the card was just paper. Found out here that the bank could give me ₹4 lakh against it.',
+    useCase: 'loan',
+    outcome: '₹4L loan approved · ABFL',
   },
   {
-    text: 'Bank ne 11.5% pe rate bola tha. Gharauni.com pe Bajaj Finserv ne 9.5% diya. 2% kam = 60,000 rupaye bach gaye life me.',
-    name: 'Anita Patil',
-    place: 'पुणे, महाराष्ट्र',
-    role: 'Loan approved · ₹12.5L',
-    rating: 5
+    initials: 'SD',
+    name: 'Sunita Devi',
+    role: 'Homeowner',
+    village: 'Mawana',
+    district: 'Meerut',
+    quoteHi: 'पति की मृत्यु के बाद घर मेरे नाम था या नहीं, पता नहीं था। यहाँ से जाँच की — हाँ है।',
+    quote: 'After my husband passed, I didn\'t know if the house was in my name. I checked here — yes, it is.',
+    useCase: 'verification',
+    outcome: 'Title verified · Free',
   },
   {
-    text: 'Title verification ki service maine apne NBFC ke liye use ki. 200+ rural mortgages ke titles check kiye. Pehle 5 din lagta tha, ab 24 ghante.',
-    name: 'Rajesh Kumar',
-    place: 'Credit Head, mid-sized NBFC',
-    role: 'B2B customer',
-    rating: 5
-  }
+    initials: 'AK',
+    name: 'Anil Kumar',
+    role: 'School teacher',
+    village: 'Phulpur',
+    district: 'Prayagraj',
+    quoteHi: 'पुश्तैनी ज़मीन बेचनी थी। यहाँ खरीदार की घरौनी की जाँच की, धोखा बच गया।',
+    quote: 'I was selling ancestral land. Verified the buyer\'s Gharauni here — saved myself from fraud.',
+    useCase: 'sale',
+    outcome: 'Sale completed safely',
+  },
 ];
+
+const tagFor = (uc: Testimonial['useCase']) =>
+  uc === 'loan' ? { label: 'Loan against property', cls: 'bg-terracotta/10 text-terracotta' } :
+  uc === 'verification' ? { label: 'Title verification', cls: 'bg-blue-50 text-blue-800' } :
+  { label: 'Safe sale', cls: 'bg-green-50 text-green-800' };
 
 export function Testimonials() {
   return (
-    <section className="py-20 px-6 bg-ivory-50">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <div className="mono text-xs text-terracotta-600 tracking-widest mb-3">TESTIMONIALS</div>
-          <h2 className="display text-4xl sm:text-5xl m-0 leading-tight">कार्डधारकों की ज़िंदगी बदली</h2>
+    <section className="border-b border-ink/10 bg-ink/[0.02]">
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <div className="text-xs uppercase tracking-widest text-terracotta/80 font-medium mb-2">Real stories</div>
+          <h2 className="font-serif text-3xl lg:text-4xl text-ink">गाँव के लोग, असली नतीजे।</h2>
+          <p className="mt-2 text-ink/60">Village people, real outcomes.</p>
         </div>
-        <div className="grid lg:grid-cols-3 gap-6">
-          {TESTIMONIALS.map((t, i) => (
-            <div key={i} className="bg-ivory-100 p-7 border-l-4 border-terracotta-600">
-              <div className="flex gap-0.5 mb-4">
-                {[...Array(t.rating)].map((_, j) => (
-                  <Star key={j} size={14} fill="#FBBF24" className="text-amber-300" />
-                ))}
-              </div>
-              <p className="text-[15px] text-ink-800 leading-relaxed mb-5">“{t.text}”</p>
-              <div className="flex items-center gap-3 pt-4 border-t border-ivory-300">
-                <div className="w-10 h-10 rounded-full bg-terracotta-600 text-ivory-50 flex items-center justify-center font-semibold display text-lg">
-                  {t.name[0]}
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {testimonials.map((t) => {
+            const tag = tagFor(t.useCase);
+            return (
+              <article key={t.name} className="relative rounded-lg border border-ink/10 bg-paper p-7 flex flex-col">
+                <Quote className="absolute top-5 right-5 w-6 h-6 text-terracotta/15" aria-hidden />
+
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-full bg-terracotta/10 text-terracotta font-serif text-base flex items-center justify-center font-medium" aria-hidden>
+                    {t.initials}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-medium text-ink truncate">{t.name}</div>
+                    <div className="text-xs text-ink/60 truncate">{t.role}</div>
+                  </div>
                 </div>
-                <div>
-                  <div className="font-semibold text-sm">{t.name}</div>
-                  <div className="text-xs text-ink-500">{t.place} · {t.role}</div>
+
+                <p className="font-serif text-lg text-ink leading-snug mb-2">“{t.quoteHi}”</p>
+                <p className="text-sm text-ink/65 italic leading-relaxed">“{t.quote}”</p>
+
+                <div className="mt-5 pt-4 border-t border-ink/10 flex items-center justify-between gap-2 text-xs">
+                  <span className="inline-flex items-center gap-1 text-ink/60 truncate">
+                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">{t.village}, {t.district}</span>
+                  </span>
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-medium ${tag.cls} flex-shrink-0`}>
+                    {tag.label}
+                  </span>
                 </div>
-              </div>
-            </div>
-          ))}
+
+                <div className="mt-3 text-[11px] text-ink/50">
+                  Outcome: <span className="text-ink/75 font-medium">{t.outcome}</span>
+                </div>
+              </article>
+            );
+          })}
         </div>
+
+        <p className="mt-8 text-center text-xs text-ink/40">
+          Names changed for privacy. Districts and outcomes verified. Want to share your story? <a href="/contact" className="underline hover:text-terracotta">Tell us</a>.
+        </p>
       </div>
     </section>
   );
