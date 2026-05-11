@@ -147,7 +147,7 @@ export default function LoanPage() {
                   Apply to {cheapest.name} <ArrowRight className="w-4 h-4" />
                 </Link>
                 <p className="mt-3 text-[11px] text-ink/50 text-center">
-                  Free check · No commitment · Approval in 48–72 hours
+                  Free check · No commitment · Approval typically in 48–72 hours after lender review
                 </p>
               </div>
             </div>
@@ -234,8 +234,7 @@ export default function LoanPage() {
           </div>
 
           <p className="mt-6 text-xs text-ink/50">
-            Disclaimer: Rates indicative, sourced from each lender's published Gharauni/SVAMITVA loan product pages.
-            Final rate depends on credit score, property valuation, and tenure. Last updated May 2026.
+            Disclaimer: Rates indicative, sourced from each lender&apos;s published Gharauni/SVAMITVA loan product pages where available. Final rate depends on credit score, property valuation, and tenure. Approval and disbursal are decided by the lender. Last updated May 2026.
           </p>
         </div>
       </section>
@@ -243,7 +242,7 @@ export default function LoanPage() {
       {/* Trust + FAQ pointer */}
       <section className="border-t border-ink/10 bg-ink/[0.015]">
         <div className="mx-auto max-w-5xl px-6 py-12 text-center">
-          <h2 className="font-serif text-2xl text-ink mb-3">अभी जय्यदा सोच रहे हैं?</h2>
+          <h2 className="font-serif text-2xl text-ink mb-3">अभी ज़्यादा सोच रहे हैं?</h2>
           <p className="text-ink/70 mb-6 max-w-xl mx-auto">Not sure if your Gharauni qualifies? Check your card status first — takes 30 seconds, totally free.</p>
           <Link href="/check" className="inline-flex items-center gap-2 rounded-md border border-ink/20 bg-paper px-5 py-3 text-ink font-medium hover:bg-ink/5 transition-colors">
             Check My Gharauni Status →
