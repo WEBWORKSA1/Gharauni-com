@@ -14,7 +14,7 @@ const fields: LeadField[] = [
     { value: 'verification', label: 'General verification' },
     { value: 'other', label: 'Other' },
   ] },
-  { name: 'notes', label: 'Anything else we should know?', labelHi: 'अन्य जानकारी', type: 'textarea', placeholder: 'Optional. e.g. "Seller says paperwork is from before SVAMITVA, want to confirm."' },
+  { name: 'notes', label: 'Anything else we should know?', labelHi: 'अन्य जानकारी', type: 'textarea', placeholder: 'Optional. e.g. Seller says paperwork is from before SVAMITVA, want to confirm.' },
 ];
 
 export default function TitleCheckPage() {
@@ -41,14 +41,14 @@ export default function TitleCheckPage() {
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Your details</h2>
-            <p className="text-sm text-ink/60 mb-7">We\'ll verify the card and email you the signed report.</p>
+            <p className="text-sm text-ink/60 mb-7">We will verify the card and email you the signed report.</p>
             <LeadForm
               source="title-check"
               fields={fields}
               submitLabel="Submit · ₹499 will be invoiced"
               successHeadline="Order received"
               successHeadlineHi="ऑर्डर मिल गया"
-              successBody="We\'ll send a UPI payment link within an hour. Once paid, your report is delivered within 24-48 hours by email and WhatsApp."
+              successBody="We will send a UPI payment link within an hour. Once paid, your report is delivered within 24-48 hours by email and WhatsApp."
               preSubmit={
                 <div className="rounded-md bg-ink/[0.03] border border-ink/10 p-4 text-sm text-ink/75 flex items-start gap-3">
                   <IndianRupee className="w-4 h-4 mt-0.5 text-terracotta flex-shrink-0" />
@@ -71,7 +71,7 @@ export default function TitleCheckPage() {
               </ul>
             </div>
             <div className="text-xs text-ink/55 leading-relaxed">
-              <p className="mb-2"><strong className="text-ink/70">Refund policy:</strong> If we cannot verify the card (e.g., it doesn\'t exist or is too damaged), we refund 100% within 48 hours.</p>
+              <p className="mb-2"><strong className="text-ink/70">Refund policy:</strong> If we cannot verify the card (for example, it does not exist or is too damaged), we refund 100% within 48 hours.</p>
               <p><strong className="text-ink/70">Privacy:</strong> Your data processed under DPDP Act 2023. Card ID never shared.</p>
             </div>
           </div>

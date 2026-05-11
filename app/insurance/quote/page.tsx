@@ -70,7 +70,7 @@ export default function InsuranceQuotePage() {
               submitLabel="Get quotes →"
               successHeadline="Quotes coming your way"
               successHeadlineHi="Quotes जल्द मिलेंगे"
-              successBody="Within 24 hours, we\'ll email and WhatsApp you a side-by-side comparison of premiums from all 6 insurers. Pick your favorite. We handle the paperwork."
+              successBody="Within 24 hours, we will email and WhatsApp you a side-by-side comparison of premiums from all 6 insurers. Pick your favorite. We handle the paperwork."
             />
           </div>
 

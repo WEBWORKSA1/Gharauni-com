@@ -28,7 +28,6 @@ export default function ParserDocsPage() {
 
       <section className="bg-paper">
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[200px_1fr] gap-10">
-          {/* Sidebar */}
           <nav className="text-sm space-y-1 lg:sticky lg:top-6 self-start">
             <div className="text-[11px] uppercase tracking-widest text-ink/40 font-medium mb-2">On this page</div>
             <a href="#auth" className="block py-1 text-ink/70 hover:text-terracotta">Authentication</a>
@@ -39,20 +38,19 @@ export default function ParserDocsPage() {
             <a href="#limits" className="block py-1 text-ink/70 hover:text-terracotta">Rate limits</a>
           </nav>
 
-          {/* Content */}
           <article className="max-w-3xl space-y-10">
 
             <section id="auth">
               <h2 className="font-serif text-2xl text-ink mb-3">Authentication</h2>
               <p className="text-ink/75 mb-4">All requests require an API key in the <code className="bg-ink/[0.06] px-1.5 py-0.5 rounded text-sm">Authorization</code> header:</p>
-              <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`Authorization: Bearer gharauni_sk_live_xxxxxxxxxxxxx`}</code></pre>
-              <p className="text-sm text-ink/60 mt-3">Get your key at <Link href="/parser/signup" className="text-terracotta underline">/parser/signup</Link>. Keep it server-side — never expose in browser code.</p>
+              <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>Authorization: Bearer gharauni_sk_live_xxxxxxxxxxxxx</code></pre>
+              <p className="text-sm text-ink/60 mt-3">Get your key at <Link href="/parser/signup" className="text-terracotta underline">/parser/signup</Link>. Keep it server-side, never expose in browser code.</p>
             </section>
 
             <section id="parse">
               <h2 className="font-serif text-2xl text-ink mb-3">POST /v1/parse</h2>
               <p className="text-ink/75 mb-4">Parses a single Gharauni card from a PDF or image. Median latency 1.4s.</p>
-              <h3 className="font-medium text-ink mt-5 mb-2">Request · cURL</h3>
+              <h3 className="font-medium text-ink mt-5 mb-2">Request via cURL</h3>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`curl -X POST https://api.gharauni.com/v1/parse \\
   -H "Authorization: Bearer gharauni_sk_live_xxx" \\
   -F "file=@/path/to/card.pdf"`}</code></pre>
@@ -72,7 +70,6 @@ export default function ParserDocsPage() {
     "gharauniId": "091434-78921-04",
     "plotNumber": "178/2",
     "ownerName": "Ramesh Yadav",
-    "ownerNameHi": "रमेश यादव",
     "area": { "value": 200, "unit": "sqYd" },
     "village": "Sikandrabad",
     "tehsil": "Bulandshahr",
@@ -90,7 +87,7 @@ export default function ParserDocsPage() {
     "overall": 0.95
   }
 }`}</code></pre>
-              <p className="text-sm text-ink/60 mt-3">Fields with confidence &lt; 0.85 should be flagged for human review in your LOS.</p>
+              <p className="text-sm text-ink/60 mt-3">Fields with confidence below 0.85 should be flagged for human review in your LOS.</p>
             </section>
 
             <section id="errors">
@@ -101,11 +98,11 @@ export default function ParserDocsPage() {
                     <tr><th className="px-4 py-2 font-medium">HTTP</th><th className="px-4 py-2 font-medium">Code</th><th className="px-4 py-2 font-medium">Meaning</th></tr>
                   </thead>
                   <tbody className="divide-y divide-ink/10">
-                    <tr><td className="px-4 py-2 font-mono">400</td><td className="px-4 py-2 font-mono">invalid_file</td><td className="px-4 py-2 text-ink/70">File not a valid PDF or image, or &gt; 10MB</td></tr>
+                    <tr><td className="px-4 py-2 font-mono">400</td><td className="px-4 py-2 font-mono">invalid_file</td><td className="px-4 py-2 text-ink/70">File not a valid PDF or image, or greater than 10MB</td></tr>
                     <tr><td className="px-4 py-2 font-mono">401</td><td className="px-4 py-2 font-mono">unauthorized</td><td className="px-4 py-2 text-ink/70">Missing or invalid API key</td></tr>
                     <tr><td className="px-4 py-2 font-mono">402</td><td className="px-4 py-2 font-mono">quota_exceeded</td><td className="px-4 py-2 text-ink/70">Monthly free tier exhausted, upgrade required</td></tr>
                     <tr><td className="px-4 py-2 font-mono">422</td><td className="px-4 py-2 font-mono">not_gharauni</td><td className="px-4 py-2 text-ink/70">Document does not appear to be a SVAMITVA card</td></tr>
-                    <tr><td className="px-4 py-2 font-mono">429</td><td className="px-4 py-2 font-mono">rate_limited</td><td className="px-4 py-2 text-ink/70">Too many requests per minute; backoff and retry</td></tr>
+                    <tr><td className="px-4 py-2 font-mono">429</td><td className="px-4 py-2 font-mono">rate_limited</td><td className="px-4 py-2 text-ink/70">Too many requests per minute. Backoff and retry.</td></tr>
                     <tr><td className="px-4 py-2 font-mono">500</td><td className="px-4 py-2 font-mono">internal_error</td><td className="px-4 py-2 text-ink/70">Try again. Persistent errors: status.gharauni.com</td></tr>
                   </tbody>
                 </table>
@@ -122,7 +119,7 @@ from gharauni import Client
 
 client = Client(api_key="gharauni_sk_live_xxx")
 result = client.parse(file=open("card.pdf", "rb"))
-print(result.data.gharauni_id)  # "091434-78921-04"`}</code></pre>
+print(result.data.gharauni_id)  # 091434-78921-04`}</code></pre>
               <h3 className="font-medium text-ink mt-5 mb-2">Node.js</h3>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`npm install @gharauni/sdk
 
@@ -142,11 +139,11 @@ console.log(result.data.gharauniId);`}</code></pre>
                 <li><strong className="text-ink">Growth (₹3/parse):</strong> 5,000 req/min</li>
                 <li><strong className="text-ink">Enterprise:</strong> Up to 10,000 req/min, reserved capacity</li>
               </ul>
-              <p className="text-sm text-ink/60 mt-3">Rate limit headers (<code className="bg-ink/[0.06] px-1.5 py-0.5 rounded text-xs">X-RateLimit-Remaining</code>, <code className="bg-ink/[0.06] px-1.5 py-0.5 rounded text-xs">X-RateLimit-Reset</code>) returned on every response.</p>
+              <p className="text-sm text-ink/60 mt-3">Rate limit headers returned on every response.</p>
             </section>
 
             <div className="pt-8 border-t border-ink/10 flex items-center justify-between">
-              <Link href="/parser" className="text-sm text-ink/60 hover:text-terracotta">← Back to product page</Link>
+              <Link href="/parser" className="text-sm text-ink/60 hover:text-terracotta">Back to product page</Link>
               <a href="mailto:api@gharauni.com" className="inline-flex items-center gap-1 text-sm text-terracotta hover:underline">
                 Question? Email api@gharauni.com <ExternalLink className="w-3 h-3" />
               </a>

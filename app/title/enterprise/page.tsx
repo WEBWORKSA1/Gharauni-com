@@ -9,12 +9,12 @@ const fields: LeadField[] = [
   { name: 'email', label: 'Work email', type: 'email', required: true, gridCols: 1 },
   { name: 'phone', label: 'Phone', type: 'tel', required: true, gridCols: 1, placeholder: '+91 XXXXX XXXXX' },
   { name: 'volume', label: 'Expected monthly check volume', type: 'select', required: true, gridCols: 1, options: [
-    { value: '50-500', label: '50–500 checks/month' },
-    { value: '500-5000', label: '500–5,000 checks/month' },
-    { value: '5000-50000', label: '5,000–50,000 checks/month' },
+    { value: '50-500', label: '50 to 500 checks/month' },
+    { value: '500-5000', label: '500 to 5,000 checks/month' },
+    { value: '5000-50000', label: '5,000 to 50,000 checks/month' },
     { value: '50000+', label: '50,000+ checks/month' },
   ] },
-  { name: 'useCase', label: 'Use case', type: 'textarea', required: true, placeholder: 'Briefly describe what you want to use title verification for. e.g., "Pre-disbursal collateral verification for our ₹5L–50L LAP product across UP and Bihar."' },
+  { name: 'useCase', label: 'Use case', type: 'textarea', required: true, placeholder: 'Briefly describe what you want to use title verification for. For example: pre-disbursal collateral verification for our LAP product across UP and Bihar.' },
 ];
 
 export default function TitleEnterprisePage() {
@@ -42,7 +42,7 @@ export default function TitleEnterprisePage() {
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-14">
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Talk to our enterprise team</h2>
-            <p className="text-sm text-ink/60 mb-7">We\'ll respond within one business day with a custom proposal.</p>
+            <p className="text-sm text-ink/60 mb-7">We will respond within one business day with a custom proposal.</p>
             <LeadForm
               source="title-enterprise"
               fields={fields}

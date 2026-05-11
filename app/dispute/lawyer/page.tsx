@@ -17,12 +17,12 @@ const fields: LeadField[] = [
   { name: 'disputeType', label: 'Type of dispute', labelHi: 'विवाद का प्रकार', type: 'select', required: true, options: [
     { value: 'inheritance', label: 'Inheritance / family partition · विरासत' },
     { value: 'boundary', label: 'Boundary disagreement · सीमा' },
-    { value: 'double-claim', label: 'Two parties claiming same plot · दोहरा दावा' },
-    { value: 'fraud', label: 'Suspected fraud / forged papers · ज़मीन का धोखा' },
+    { value: 'double-claim', label: 'Two parties claiming same plot' },
+    { value: 'fraud', label: 'Suspected fraud / forged papers' },
     { value: 'mutation', label: 'Mutation / record correction issue' },
     { value: 'other', label: 'Other' },
   ] },
-  { name: 'situation', label: 'Briefly describe your situation', labelHi: 'समस्या का विवरण', type: 'textarea', required: true, placeholder: 'e.g., "My uncle is claiming my father\'s land based on a 30-year-old document. We have the Gharauni in my name. Need help understanding next steps."' },
+  { name: 'situation', label: 'Briefly describe your situation', labelHi: 'समस्या का विवरण', type: 'textarea', required: true, placeholder: 'For example: My uncle is claiming my fathers land based on a 30-year-old document. We have the Gharauni in my name. Need help understanding next steps.' },
   { name: 'urgency', label: 'How urgent is this?', type: 'select', required: true, gridCols: 1, options: [
     { value: 'court-pending', label: 'Court case already filed' },
     { value: 'soon', label: 'Need to act within 30 days' },
@@ -32,7 +32,7 @@ const fields: LeadField[] = [
     { value: '999', label: '₹999 first consult only' },
     { value: '5k', label: 'Up to ₹5,000' },
     { value: '25k', label: 'Up to ₹25,000' },
-    { value: 'open', label: 'Open · depends on case' },
+    { value: 'open', label: 'Open - depends on case' },
   ] },
 ];
 
@@ -68,7 +68,7 @@ export default function DisputeLawyerPage() {
               submitLabel="Request lawyer match"
               successHeadline="Request received"
               successHeadlineHi="अनुरोध मिला"
-              successBody="A property lawyer matched to your district will call you within 24 hours. The first 30-minute consult is ₹999. After the call, you decide whether to engage further — with fully transparent pricing."
+              successBody="A property lawyer matched to your district will call you within 24 hours. The first 30-minute consult is ₹999. After the call, you decide whether to engage further with fully transparent pricing."
             />
           </div>
 

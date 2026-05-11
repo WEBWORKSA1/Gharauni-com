@@ -33,11 +33,11 @@ export default function DisputeGuidePage() {
   };
 
   const chapters = [
-    { num: 1, title: 'Understanding your Gharauni card', body: 'What the card means legally, what it doesn\'t cover, and why it matters in a dispute.' },
+    { num: 1, title: 'Understanding your Gharauni card', body: 'What the card means legally, what it does not cover, and why it matters in a dispute.' },
     { num: 2, title: 'The 4-stage resolution path', body: 'Document, talk, mediate, escalate. The right sequence saves time and money.' },
     { num: 3, title: 'Inheritance disputes', body: 'Step-by-step for sibling conflicts under Hindu Succession Act and Muslim personal law.' },
     { num: 4, title: 'Boundary disagreements', body: 'Joint Tehsildar correction requests, GPS reconciliation, neighbor agreements.' },
-    { num: 5, title: 'Double-claim and forged-document cases', body: 'When someone else claims your plot. Documentation checklist + lawyer escalation path.' },
+    { num: 5, title: 'Double-claim and forged-document cases', body: 'When someone else claims your plot. Documentation checklist and lawyer escalation path.' },
     { num: 6, title: 'Going to the panchayat', body: 'How to prepare, what to say, what to bring. Includes a printable mediation request format.' },
     { num: 7, title: 'Tehsildar and court process', body: 'Mutation applications, formal hearings, what to expect, typical timelines.' },
     { num: 8, title: 'Free legal aid in India', body: 'DLSA application, Lok Adalat, when each is appropriate. With contact numbers per state.' },
@@ -57,7 +57,7 @@ export default function DisputeGuidePage() {
             </h1>
             <p className="mt-2 font-serif text-lg text-ink/70 italic">A clear, step-by-step playbook for the most common land disputes.</p>
             <p className="mt-5 text-ink/80 max-w-2xl">
-              एक छोटी-सी गाइड, साफ़ हिंदी में। 80% से ज़्यादा घरौनी विवाद कोर्ट तक नहीं जाने चाहिए। इस गाइड में वह सब कुछ है जो हमने 23 वकीलों और 100+ केसों से सीखा है। Drop your email below — we\'ll WhatsApp you the PDF immediately.
+              एक छोटी-सी गाइड, साफ़ हिंदी में। 80% से ज़्यादा घरौनी विवाद कोर्ट तक नहीं जाने चाहिए। इस गाइड में वह सब कुछ है जो हमने 23 वकीलों और 100+ केसों से सीखा है। Drop your email below and we will WhatsApp you the PDF immediately.
             </p>
           </div>
         </div>
@@ -65,7 +65,6 @@ export default function DisputeGuidePage() {
 
       <section className="bg-paper">
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
-          {/* Download form */}
           <div>
             <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9 mb-8">
               {submitted ? (
@@ -73,7 +72,7 @@ export default function DisputeGuidePage() {
                   <CheckCircle2 className="w-12 h-12 text-green-700 mx-auto mb-3" />
                   <div className="font-serif text-lg text-ink/70 mb-1">गाइड भेजी जा रही है</div>
                   <h3 className="font-serif text-2xl text-ink mb-2">Check your email</h3>
-                  <p className="text-ink/70 max-w-md mx-auto">The PDF guide is on its way to <span className="font-medium text-ink">{email}</span>. It usually arrives within 5 minutes. Check spam if you don\'t see it.</p>
+                  <p className="text-ink/70 max-w-md mx-auto">The PDF guide is on its way to <span className="font-medium text-ink">{email}</span>. It usually arrives within 5 minutes. Check spam if you do not see it.</p>
                 </div>
               ) : (
                 <form onSubmit={onSubmit}>
@@ -104,7 +103,7 @@ export default function DisputeGuidePage() {
             </div>
 
             <div>
-              <h2 className="font-serif text-2xl text-ink mb-5">What\'s inside</h2>
+              <h2 className="font-serif text-2xl text-ink mb-5">What is inside</h2>
               <ol className="space-y-3">
                 {chapters.map((c) => (
                   <li key={c.num} className="flex items-start gap-4">
@@ -121,11 +120,10 @@ export default function DisputeGuidePage() {
             </div>
           </div>
 
-          {/* Side rail */}
           <div className="space-y-6">
             <div className="rounded-lg border border-ink/10 bg-ink/[0.015] p-6">
               <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Already in a dispute?</div>
-              <p className="text-sm text-ink/75 mb-4">If you\'re past the reading-and-planning stage and need a real lawyer, we have a verified network with fixed pricing.</p>
+              <p className="text-sm text-ink/75 mb-4">If you are past the reading-and-planning stage and need a real lawyer, we have a verified network with fixed pricing.</p>
               <Link href="/dispute/lawyer" className="inline-flex items-center gap-2 rounded-md bg-ink text-paper px-4 py-2 text-sm font-medium hover:bg-terracotta transition-colors">
                 <Scale className="w-3.5 h-3.5" /> Talk to a lawyer · ₹999
               </Link>

@@ -17,8 +17,8 @@ const fields: LeadField[] = [
   ] },
   { name: 'volume', label: 'Expected monthly volume', type: 'select', required: true, gridCols: 1, options: [
     { value: 'trial', label: 'Trial only (free 50/month)' },
-    { value: 'starter', label: '50–5,000/month (Starter)' },
-    { value: 'growth', label: '5k–50k/month (Growth)' },
+    { value: 'starter', label: '50 to 5,000/month (Starter)' },
+    { value: 'growth', label: '5k to 50k/month (Growth)' },
     { value: 'enterprise', label: '50k+/month (Enterprise)' },
   ] },
 ];
@@ -47,14 +47,14 @@ export default function ParserSignupPage() {
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-14">
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Sign up for the trial</h2>
-            <p className="text-sm text-ink/60 mb-7">We\'ll email your API key within 10 minutes.</p>
+            <p className="text-sm text-ink/60 mb-7">We will email your API key within 10 minutes.</p>
             <LeadForm
               source="parser-signup"
               fields={fields}
               submitLabel="Get API key"
               successHeadline="Check your inbox"
               successHeadlineHi="ईमेल चेक करें"
-              successBody="We\'ve sent your API key and a 5-minute quickstart guide. If you don\'t see it within 15 minutes, check spam or email hello@gharauni.com."
+              successBody="We have sent your API key and a 5-minute quickstart guide. If you do not see it within 15 minutes, check spam or email hello@gharauni.com."
             />
           </div>
 
@@ -64,7 +64,7 @@ export default function ParserSignupPage() {
               <ul className="space-y-3 text-sm text-ink/75">
                 <li className="flex items-start gap-2"><Key className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span><strong className="text-ink">50 parses/month</strong> · renewed monthly, never expires</span></li>
                 <li className="flex items-start gap-2"><Zap className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span><strong className="text-ink">Full feature access</strong> · same accuracy as paid tier</span></li>
-                <li className="flex items-start gap-2"><BookOpen className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span><strong className="text-ink">Quickstart guide</strong> · Python + Node.js SDK examples</span></li>
+                <li className="flex items-start gap-2"><BookOpen className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span><strong className="text-ink">Quickstart guide</strong> · Python and Node.js SDK examples</span></li>
               </ul>
               <div className="mt-4 pt-4 border-t border-ink/10">
                 <Link href="/parser/docs" className="inline-flex items-center gap-1 text-sm text-terracotta hover:underline">
