@@ -1,6 +1,7 @@
 import { Umbrella, CheckCircle2, AlertTriangle } from 'lucide-react';
 import { Shell } from '@/components/shell';
 import { LeadForm, LeadField } from '@/components/lead-form';
+import { WaitlistBanner } from '@/components/waitlist-banner';
 
 const fields: LeadField[] = [
   { name: 'gharauniId', label: 'Gharauni Card ID', labelHi: 'घरौनी आईडी', required: true, placeholder: 'e.g. 091434-78921-04', helpText: '13-digit ID on the front of your card' },
@@ -41,19 +42,23 @@ const fields: LeadField[] = [
 export default function InsuranceQuotePage() {
   return (
     <Shell>
+      <WaitlistBanner
+        service="Rural home insurance comparison"
+        whatHappensNow="Insurer integrations are in progress. Your details secure your spot for first-look quotes."
+      />
       <section className="border-b border-ink/10 bg-paper">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-paper to-paper pointer-events-none" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-6 py-14">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-700/30 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800 mb-4">
-              <Umbrella className="w-3.5 h-3.5" /> Free quote · 6 insurers · No obligation
+              <Umbrella className="w-3.5 h-3.5" /> Quotes when launched · from 6 insurers we are integrating with
             </div>
             <h1 className="font-serif text-4xl lg:text-5xl text-ink leading-tight">
               Get insurance quotes for your home.
             </h1>
-            <p className="mt-2 font-serif text-lg text-ink/70 italic">Compare 6 insurers in 24 hours.</p>
+            <p className="mt-2 font-serif text-lg text-ink/70 italic">Compare 6 insurers when we launch.</p>
             <p className="mt-5 text-ink/80 max-w-2xl">
-              अपने घर की कुछ जानकारी दें। हम HDFC ERGO, ICICI Lombard, Bajaj Allianz, SBI General, New India Assurance, और United India से quotes लाएंगे। सबसे सस्ती policy चुनें। शुल्क शून्य।
+              अपने घर की कुछ जानकारी दें। We are integrating with HDFC ERGO, ICICI Lombard, Bajaj Allianz, SBI General, New India Assurance, and United India. Submit your details to be first in line for quotes.
             </p>
           </div>
         </div>
@@ -63,25 +68,26 @@ export default function InsuranceQuotePage() {
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Property details</h2>
-            <p className="text-sm text-ink/60 mb-7">Takes 2 minutes. We do the comparison.</p>
+            <p className="text-sm text-ink/60 mb-7">Takes 2 minutes. No payment requested today.</p>
             <LeadForm
-              source="insurance-quote"
+              source="insurance-quote-waitlist"
               fields={fields}
-              submitLabel="Get quotes →"
-              successHeadline="Quotes coming your way"
-              successHeadlineHi="Quotes जल्द मिलेंगे"
-              successBody="Within 24 hours, we will email and WhatsApp you a side-by-side comparison of premiums from all 6 insurers. Pick your favorite. We handle the paperwork."
+              submitLabel="Reserve my quote spot"
+              successHeadline="You are on the waitlist"
+              successHeadlineHi="आप सूची में हैं"
+              successBody="When insurer integrations go live, we will email and WhatsApp you a side-by-side comparison of premiums. No obligation — pick any insurer you want, or skip entirely."
             />
           </div>
 
           <div className="space-y-6">
             <div className="rounded-lg border border-ink/10 bg-ink/[0.015] p-6">
-              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Typical premium ranges</div>
+              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Expected premium ranges (at launch)</div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between text-ink/75"><span>200 sq yd pucca · ₹5L cover</span><span className="text-ink font-medium">₹1,200–1,800/yr</span></div>
                 <div className="flex justify-between text-ink/75"><span>300 sq yd pucca · ₹10L cover</span><span className="text-ink font-medium">₹2,200–3,500/yr</span></div>
                 <div className="flex justify-between text-ink/75"><span>Flood-prone district surcharge</span><span className="text-ink font-medium">+15–30%</span></div>
               </div>
+              <p className="text-xs text-ink/50 mt-3 pt-3 border-t border-ink/10">Indicative figures based on published insurer rate cards. Final premiums will be quoted by the insurer.</p>
             </div>
             <div className="rounded-md bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900">
               <div className="flex items-start gap-2">
@@ -90,7 +96,7 @@ export default function InsuranceQuotePage() {
               </div>
             </div>
             <div className="text-xs text-ink/55">
-              <p className="flex items-start gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 text-green-700 flex-shrink-0" /> Quotes are free. We earn commission from the insurer only if you choose to buy.</p>
+              <p className="flex items-start gap-1.5"><CheckCircle2 className="w-3.5 h-3.5 mt-0.5 text-green-700 flex-shrink-0" /> Free comparison service. We will earn commission from the insurer only if you choose to buy.</p>
             </div>
           </div>
         </div>

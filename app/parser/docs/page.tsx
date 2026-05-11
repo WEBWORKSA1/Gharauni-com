@@ -1,25 +1,34 @@
 import Link from 'next/link';
-import { Code2, Zap, Key, FileText, Github, ExternalLink } from 'lucide-react';
+import { Code2, Zap, Key, FileText, Github, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Shell } from '@/components/shell';
+import { WaitlistBanner } from '@/components/waitlist-banner';
 
 export default function ParserDocsPage() {
   return (
     <Shell>
+      <WaitlistBanner
+        service="Parser API"
+        whatHappensNow="Docs published as a preview. Sign up to receive your sandbox key the day v1 ships."
+      />
       <section className="border-b border-ink/10 bg-paper">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-paper to-paper pointer-events-none" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-6 py-12">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-700/30 bg-blue-50 px-3 py-1 text-xs font-medium text-blue-800 mb-4">
-              <Code2 className="w-3.5 h-3.5" /> API Documentation · v1
+              <Code2 className="w-3.5 h-3.5" /> API Documentation · v1 preview
             </div>
             <h1 className="font-serif text-4xl text-ink leading-tight">Gharauni Parser API</h1>
             <p className="mt-2 font-serif text-lg text-ink/70 italic">REST API to extract structured data from SVAMITVA property card PDFs and images.</p>
+            <div className="mt-4 inline-flex items-center gap-2 rounded-md bg-amber-50 border border-amber-200 px-3 py-2 text-xs text-amber-900">
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span><strong>Preview only.</strong> The endpoints below are not live yet. Sign up to be notified when v1 ships and receive a sandbox key.</span>
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/parser/signup" className="inline-flex items-center gap-2 rounded-md bg-terracotta px-5 py-2.5 text-white font-medium hover:bg-terracotta-dark transition-colors">
-                <Key className="w-4 h-4" /> Get free API key
+                <Key className="w-4 h-4" /> Join the API waitlist
               </Link>
               <a href="https://github.com/gharauni/parser-sdk" target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-md border border-ink/20 bg-paper px-5 py-2.5 text-ink font-medium hover:bg-ink/5 transition-colors">
-                <Github className="w-4 h-4" /> SDK on GitHub
+                <Github className="w-4 h-4" /> SDK repo (coming)
               </a>
             </div>
           </div>
@@ -42,14 +51,14 @@ export default function ParserDocsPage() {
 
             <section id="auth">
               <h2 className="font-serif text-2xl text-ink mb-3">Authentication</h2>
-              <p className="text-ink/75 mb-4">All requests require an API key in the <code className="bg-ink/[0.06] px-1.5 py-0.5 rounded text-sm">Authorization</code> header:</p>
+              <p className="text-ink/75 mb-4">At launch, all requests will require an API key in the <code className="bg-ink/[0.06] px-1.5 py-0.5 rounded text-sm">Authorization</code> header:</p>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>Authorization: Bearer gharauni_sk_live_xxxxxxxxxxxxx</code></pre>
-              <p className="text-sm text-ink/60 mt-3">Get your key at <Link href="/parser/signup" className="text-terracotta underline">/parser/signup</Link>. Keep it server-side, never expose in browser code.</p>
+              <p className="text-sm text-ink/60 mt-3">Join the waitlist at <Link href="/parser/signup" className="text-terracotta underline">/parser/signup</Link>. We will email your sandbox key the day v1 ships.</p>
             </section>
 
             <section id="parse">
               <h2 className="font-serif text-2xl text-ink mb-3">POST /v1/parse</h2>
-              <p className="text-ink/75 mb-4">Parses a single Gharauni card from a PDF or image. Median latency 1.4s.</p>
+              <p className="text-ink/75 mb-4">Planned: parses a single Gharauni card from a PDF or image. Target latency 1.4s median.</p>
               <h3 className="font-medium text-ink mt-5 mb-2">Request via cURL</h3>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`curl -X POST https://api.gharauni.com/v1/parse \\
   -H "Authorization: Bearer gharauni_sk_live_xxx" \\
@@ -62,7 +71,7 @@ export default function ParserDocsPage() {
             </section>
 
             <section id="response">
-              <h2 className="font-serif text-2xl text-ink mb-3">Response schema</h2>
+              <h2 className="font-serif text-2xl text-ink mb-3">Response schema (planned)</h2>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`{
   "id": "parse_01HXYZ...",
   "durationMs": 1380,
@@ -91,7 +100,7 @@ export default function ParserDocsPage() {
             </section>
 
             <section id="errors">
-              <h2 className="font-serif text-2xl text-ink mb-3">Error codes</h2>
+              <h2 className="font-serif text-2xl text-ink mb-3">Error codes (planned)</h2>
               <div className="rounded-md border border-ink/10 overflow-hidden">
                 <table className="w-full text-sm">
                   <thead className="bg-ink/5 text-left">
@@ -110,8 +119,8 @@ export default function ParserDocsPage() {
             </section>
 
             <section id="sdks">
-              <h2 className="font-serif text-2xl text-ink mb-3">SDKs</h2>
-              <p className="text-ink/75 mb-4">Official SDKs are MIT-licensed.</p>
+              <h2 className="font-serif text-2xl text-ink mb-3">SDKs (planned)</h2>
+              <p className="text-ink/75 mb-4">Official SDKs will be MIT-licensed at launch.</p>
               <h3 className="font-medium text-ink mt-5 mb-2">Python</h3>
               <pre className="bg-ink text-paper text-xs rounded-md p-4 overflow-x-auto"><code>{`pip install gharauni-sdk
 
@@ -132,7 +141,7 @@ console.log(result.data.gharauniId);`}</code></pre>
             </section>
 
             <section id="limits">
-              <h2 className="font-serif text-2xl text-ink mb-3">Rate limits</h2>
+              <h2 className="font-serif text-2xl text-ink mb-3">Rate limits (planned)</h2>
               <ul className="space-y-1.5 text-ink/75 text-sm">
                 <li><strong className="text-ink">Free:</strong> 100 req/min, 50 parses/month total</li>
                 <li><strong className="text-ink">Starter (₹5/parse):</strong> 1,000 req/min, capped at ₹5k/month</li>
@@ -144,9 +153,9 @@ console.log(result.data.gharauniId);`}</code></pre>
 
             <div className="pt-8 border-t border-ink/10 flex items-center justify-between">
               <Link href="/parser" className="text-sm text-ink/60 hover:text-terracotta">Back to product page</Link>
-              <a href="mailto:api@gharauni.com" className="inline-flex items-center gap-1 text-sm text-terracotta hover:underline">
-                Question? Email api@gharauni.com <ExternalLink className="w-3 h-3" />
-              </a>
+              <Link href="/contact" className="inline-flex items-center gap-1 text-sm text-terracotta hover:underline">
+                Question? Use our contact form <ExternalLink className="w-3 h-3" />
+              </Link>
             </div>
           </article>
         </div>

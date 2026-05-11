@@ -1,6 +1,7 @@
 import { Scale, MessageSquare, Phone, MapPin } from 'lucide-react';
 import { Shell } from '@/components/shell';
 import { LeadForm, LeadField } from '@/components/lead-form';
+import { WaitlistBanner } from '@/components/waitlist-banner';
 
 const fields: LeadField[] = [
   { name: 'name', label: 'Your name', labelHi: 'अपना नाम', required: true, gridCols: 1 },
@@ -39,19 +40,23 @@ const fields: LeadField[] = [
 export default function DisputeLawyerPage() {
   return (
     <Shell>
+      <WaitlistBanner
+        service="Property lawyer network"
+        whatHappensNow="Lawyer verification is in progress. We will match you the moment our network is live."
+      />
       <section className="border-b border-ink/10 bg-paper">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-50 via-paper to-paper pointer-events-none" aria-hidden />
         <div className="relative mx-auto max-w-7xl px-6 py-14">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-amber-700/30 bg-amber-50 px-3 py-1 text-xs font-medium text-amber-800 mb-4">
-              <Scale className="w-3.5 h-3.5" /> Verified lawyer · ₹999 first consult · Transparent fees
+              <Scale className="w-3.5 h-3.5" /> Verified lawyer network · ₹999 first consult planned
             </div>
             <h1 className="font-serif text-4xl lg:text-5xl text-ink leading-tight">
               Talk to a verified property lawyer.
             </h1>
             <p className="mt-2 font-serif text-lg text-ink/70 italic">30-minute consultation. Clear next steps. Fixed pricing.</p>
             <p className="mt-5 text-ink/80 max-w-2xl">
-              हम आपको सिर्फ़ प्रॉपर्टी वकील से जोड़ते हैं जिनका हमने background check किया है। ₹999 में 30 मिनट की पहली consultation — आपको पता चल जाएगा कि आगे क्या करना है और कितना खर्च आएगा। No surprise bills.
+              हम आपको सिर्फ़ प्रॉपर्टी वकील से जोड़ेंगे जिनका प्रापर्टी-केस में अनुभव है और जिनका हमने background check किया है। ₹999 में 30 मिनट की पहली consultation — आपको पता चल जाएगा कि आगे क्या करना है और कितना खर्च आएगा। No surprise bills.
             </p>
           </div>
         </div>
@@ -60,21 +65,21 @@ export default function DisputeLawyerPage() {
       <section className="bg-paper">
         <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
-            <h2 className="font-serif text-2xl text-ink mb-1">Book a consultation</h2>
-            <p className="text-sm text-ink/60 mb-7">A lawyer matched to your district will call within 24 hours.</p>
+            <h2 className="font-serif text-2xl text-ink mb-1">Reserve a consultation</h2>
+            <p className="text-sm text-ink/60 mb-7">When our lawyer network is live, the lawyer matched to your district will call within 24 hours.</p>
             <LeadForm
-              source="dispute-lawyer"
+              source="dispute-lawyer-waitlist"
               fields={fields}
-              submitLabel="Request lawyer match"
-              successHeadline="Request received"
-              successHeadlineHi="अनुरोध मिला"
-              successBody="A property lawyer matched to your district will call you within 24 hours. The first 30-minute consult is ₹999. After the call, you decide whether to engage further with fully transparent pricing."
+              submitLabel="Reserve my consultation"
+              successHeadline="You are on the list"
+              successHeadlineHi="आप सूची में हैं"
+              successBody="As soon as a verified property lawyer is on board in your district, we will connect you. No payment is taken today. First consult will be ₹999, all subsequent fees disclosed in writing before work begins."
             />
           </div>
 
           <div className="space-y-6">
             <div className="rounded-lg border border-ink/10 bg-ink/[0.015] p-6">
-              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Typical fixed prices</div>
+              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Planned fixed prices</div>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between text-ink/75"><span>30-min consult</span><span className="text-ink font-medium">₹999</span></div>
                 <div className="flex justify-between text-ink/75"><span>Drafting partition deed</span><span className="text-ink font-medium">₹5,000–8,000</span></div>
@@ -85,11 +90,11 @@ export default function DisputeLawyerPage() {
             </div>
 
             <div className="rounded-lg border border-ink/10 p-6">
-              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Lawyer network</div>
+              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Lawyer network status</div>
               <ul className="space-y-2 text-sm text-ink/75">
-                <li className="flex items-start gap-2"><MapPin className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>23 verified property lawyers across UP, MH, MP, HR</span></li>
-                <li className="flex items-start gap-2"><Scale className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>Each has 5+ years specifically in rural land disputes</span></li>
-                <li className="flex items-start gap-2"><MessageSquare className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>WhatsApp + phone communication, Hindi or English</span></li>
+                <li className="flex items-start gap-2"><MapPin className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>Vetting underway: UP, MH, MP, HR</span></li>
+                <li className="flex items-start gap-2"><Scale className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>Criteria: 5+ years rural land disputes, no disciplinary record</span></li>
+                <li className="flex items-start gap-2"><MessageSquare className="w-4 h-4 text-terracotta mt-0.5 flex-shrink-0" /><span>WhatsApp + phone, Hindi or English</span></li>
               </ul>
             </div>
           </div>

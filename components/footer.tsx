@@ -41,8 +41,9 @@ export function Footer() {
           </div>
           <div>
             <div className="font-semibold mb-3 text-ivory-50">Languages</div>
-            {['हिंदी', 'English', 'मराठी', 'తెలుగు', 'भोजपुरी'].map(s =>
-              <div key={s} className="py-1.5 text-ink-400 text-sm">{s}</div>)}
+            <div className="py-1.5 text-ink-400 text-sm">हिंदी</div>
+            <div className="py-1.5 text-ink-400 text-sm">English</div>
+            <div className="py-1.5 text-ink-500 text-xs mt-2">Marathi, Telugu, Bhojpuri planned</div>
           </div>
         </div>
         <div className="border-t border-ink-800 pt-6 flex justify-between flex-wrap gap-3 text-[13px] text-ink-400">
