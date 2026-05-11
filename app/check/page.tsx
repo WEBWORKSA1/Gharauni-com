@@ -6,6 +6,23 @@ import { useRouter } from 'next/navigation';
 import { Search, MapPin, FileText, Clock, Shield, CheckCircle2, ChevronRight, Info } from 'lucide-react';
 import { Shell } from '@/components/shell';
 import { CardMockup } from '@/components/card-mockup';
+import type { GharauniCard } from '@/lib/types';
+
+// Sample card shown as a preview of what users get back after a check.
+const SAMPLE_CARD: GharauniCard = {
+  cardId: '091434-78921-04',
+  owner: 'Ramesh Yadav',
+  village: 'Sikandrabad',
+  district: 'Bulandshahr',
+  state: 'Uttar Pradesh',
+  area: '220 sq yd',
+  areaSqft: 1980,
+  issued: '2024-03-18',
+  status: 'READY',
+  loanEligible: true,
+  eligibilityMin: 800000,
+  eligibilityMax: 1500000,
+};
 
 export default function CheckPage() {
   const router = useRouter();
@@ -142,7 +159,7 @@ export default function CheckPage() {
           {/* Preview pane: what you'll get */}
           <div className="space-y-6">
             <div>
-              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">What you'll get back</div>
+              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">What you will get back</div>
               <h3 className="font-serif text-xl text-ink mb-4">जाँच के बाद आपको यह मिलेगा</h3>
             </div>
 
@@ -189,7 +206,7 @@ export default function CheckPage() {
             <div className="pt-4 border-t border-ink/10">
               <div className="text-xs text-ink/50 mb-3">Example Gharauni card:</div>
               <div className="scale-90 origin-top-left">
-                <CardMockup />
+                <CardMockup card={SAMPLE_CARD} showEligibility={false} />
               </div>
             </div>
           </div>
@@ -204,21 +221,21 @@ export default function CheckPage() {
               <Shield className="w-5 h-5 text-terracotta flex-shrink-0" />
               <div>
                 <div className="font-medium text-ink">DPDP Act 2023 compliant</div>
-                <div className="text-xs text-ink/60 mt-0.5">Your data is processed under India's Digital Personal Data Protection Act.</div>
+                <div className="text-xs text-ink/60 mt-0.5">Your data is processed under India&apos;s Digital Personal Data Protection Act.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <CheckCircle2 className="w-5 h-5 text-terracotta flex-shrink-0" />
               <div>
                 <div className="font-medium text-ink">Source: MoPR official portal</div>
-                <div className="text-xs text-ink/60 mt-0.5">Data sourced from Ministry of Panchayati Raj's SVAMITVA database.</div>
+                <div className="text-xs text-ink/60 mt-0.5">Data sourced from Ministry of Panchayati Raj&apos;s SVAMITVA database.</div>
               </div>
             </div>
             <div className="flex items-start gap-3">
               <Info className="w-5 h-5 text-terracotta flex-shrink-0" />
               <div>
                 <div className="font-medium text-ink">Pending data, type freely</div>
-                <div className="text-xs text-ink/60 mt-0.5">Even if your tehsil isn't in our dropdown yet, type the village name — we'll find it.</div>
+                <div className="text-xs text-ink/60 mt-0.5">Even if your tehsil is not in our dropdown yet, type the village name and we will find it.</div>
               </div>
             </div>
           </div>
