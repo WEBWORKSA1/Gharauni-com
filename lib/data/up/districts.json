@@ -8,9 +8,9 @@
     "divisionHi": "सहारनपुर",
     "divisionCode": "SHR",
     "headquarters": "Saharanpur",
-    "tehsilCount": 4,
+    "tehsilCount": 5,
     "blockCount": 11,
-    "hasDetailedData": false
+    "hasDetailedData": true
   },
   {
     "code": "09-02",
@@ -23,7 +23,7 @@
     "headquarters": "Shamli",
     "tehsilCount": 3,
     "blockCount": 5,
-    "hasDetailedData": false
+    "hasDetailedData": true
   },
   {
     "code": "09-03",
@@ -34,9 +34,9 @@
     "divisionHi": "सहारनपुर",
     "divisionCode": "SHR",
     "headquarters": "Muzaffarnagar",
-    "tehsilCount": 5,
+    "tehsilCount": 4,
     "blockCount": 9,
-    "hasDetailedData": false
+    "hasDetailedData": true
   },
   {
     "code": "09-04",
@@ -47,9 +47,9 @@
     "divisionHi": "मेरठ",
     "divisionCode": "MRT",
     "headquarters": "Bijnor",
-    "tehsilCount": 6,
+    "tehsilCount": 5,
     "blockCount": 11,
-    "hasDetailedData": false
+    "hasDetailedData": true
   },
   {
     "code": "09-05",
