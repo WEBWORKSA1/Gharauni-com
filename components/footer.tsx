@@ -13,7 +13,7 @@ export function Footer() {
               <div className="display text-2xl text-ivory-50">घरौनी</div>
             </div>
             <p className="text-ink-400 text-sm leading-relaxed">
-              India’s first dedicated platform for SVAMITVA cardholders.
+              India&rsquo;s first dedicated platform for SVAMITVA cardholders.
             </p>
           </div>
           <div>
@@ -30,13 +30,13 @@ export function Footer() {
             <Link href="/contact" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Contact</Link>
             <Link href={ROUTES.parser} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Developer API</Link>
             <Link href={ROUTES.learn} className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Learn</Link>
-            <a href="mailto:partners@gharauni.com" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Partnerships</a>
+            <Link href="/partners" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Partnerships</Link>
           </div>
           <div>
             <div className="font-semibold mb-3 text-ivory-50">Legal</div>
             <Link href="/privacy" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Privacy Policy</Link>
             <Link href="/terms" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Terms of Service</Link>
-            <a href="mailto:legal@gharauni.com" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Legal contact</a>
+            <Link href="/contact" className="block py-1.5 text-ink-400 text-sm hover:text-ivory-200">Legal contact</Link>
             <div className="py-1.5 text-ink-400 text-xs mt-3">DPDP Act 2023 compliant</div>
           </div>
           <div>

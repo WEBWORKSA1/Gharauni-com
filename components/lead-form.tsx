@@ -2,11 +2,10 @@
 
 import { useState, ReactNode } from 'react';
 import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import Link from 'next/link';
 
-// Shared lead-capture form component used by /title/check, /title/enterprise,
-// /parser/signup, /insurance/quote, /dispute/lawyer.
-// Posts to /api/leads. On success, shows a confirmation. Light validation only —
-// real validation happens server-side.
+// Shared lead-capture form component used by every lead form on the site.
+// Posts to /api/leads which routes to the destination email server-side.
 
 export type LeadField = {
   name: string;
@@ -21,13 +20,12 @@ export type LeadField = {
 };
 
 export type LeadFormProps = {
-  source: string;       // identifier sent to /api/leads, e.g. 'title-check'
+  source: string;
   fields: LeadField[];
   submitLabel: string;
   successHeadline: string;
   successHeadlineHi?: string;
   successBody: string;
-  // Optional rendered above the submit button — e.g. price + disclaimers
   preSubmit?: ReactNode;
 };
 
@@ -61,7 +59,7 @@ export function LeadForm({
       setSubmitted(true);
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'Submission failed';
-      setError(`${msg}. Please try again or email us at hello@gharauni.com.`);
+      setError(`${msg}. Please try again or use our contact form.`);
     } finally {
       setSubmitting(false);
     }
@@ -137,7 +135,7 @@ export function LeadForm({
       {error && (
         <div className="flex items-start gap-2 rounded-md bg-red-50 border border-red-200 px-3 py-2.5 text-sm text-red-900">
           <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-          <span>{error}</span>
+          <span>{error} <Link href="/contact" className="underline">Contact us instead</Link>.</span>
         </div>
       )}
 
