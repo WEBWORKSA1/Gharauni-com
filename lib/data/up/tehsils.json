@@ -194,5 +194,124 @@
     "districtSlug": "prayagraj",
     "district": "Prayagraj",
     "districtCode": "09-65"
+  },
+  {
+    "name": "Behat",
+    "nameHi": "बेहट",
+    "districtSlug": "saharanpur",
+    "district": "Saharanpur",
+    "districtCode": "09-01"
+  },
+  {
+    "name": "Saharanpur",
+    "nameHi": "सहारनपुर",
+    "districtSlug": "saharanpur",
+    "district": "Saharanpur",
+    "districtCode": "09-01"
+  },
+  {
+    "name": "Nakur",
+    "nameHi": "नकुड़",
+    "districtSlug": "saharanpur",
+    "district": "Saharanpur",
+    "districtCode": "09-01"
+  },
+  {
+    "name": "Rampur Maniharan",
+    "nameHi": "रामपुर मनिहारान",
+    "districtSlug": "saharanpur",
+    "district": "Saharanpur",
+    "districtCode": "09-01"
+  },
+  {
+    "name": "Deoband",
+    "nameHi": "देवबंद",
+    "districtSlug": "saharanpur",
+    "district": "Saharanpur",
+    "districtCode": "09-01"
+  },
+  {
+    "name": "Shamli",
+    "nameHi": "शामली",
+    "districtSlug": "shamli",
+    "district": "Shamli",
+    "districtCode": "09-02"
+  },
+  {
+    "name": "Kairana",
+    "nameHi": "कैराना",
+    "districtSlug": "shamli",
+    "district": "Shamli",
+    "districtCode": "09-02"
+  },
+  {
+    "name": "Unn",
+    "nameHi": "ऊन",
+    "districtSlug": "shamli",
+    "district": "Shamli",
+    "districtCode": "09-02"
+  },
+  {
+    "name": "Sadar (Muzaffarnagar)",
+    "nameHi": "सदर (मुज़फ़्फ़रनगर)",
+    "districtSlug": "muzaffarnagar",
+    "district": "Muzaffarnagar",
+    "districtCode": "09-03"
+  },
+  {
+    "name": "Budhana",
+    "nameHi": "बुढ़ाना",
+    "districtSlug": "muzaffarnagar",
+    "district": "Muzaffarnagar",
+    "districtCode": "09-03"
+  },
+  {
+    "name": "Jansath",
+    "nameHi": "जानसठ",
+    "districtSlug": "muzaffarnagar",
+    "district": "Muzaffarnagar",
+    "districtCode": "09-03"
+  },
+  {
+    "name": "Khatauli",
+    "nameHi": "खतौली",
+    "districtSlug": "muzaffarnagar",
+    "district": "Muzaffarnagar",
+    "districtCode": "09-03"
+  },
+  {
+    "name": "Bijnor",
+    "nameHi": "बिजनौर",
+    "districtSlug": "bijnor",
+    "district": "Bijnor",
+    "districtCode": "09-04"
+  },
+  {
+    "name": "Najibabad",
+    "nameHi": "नजीबाबाद",
+    "districtSlug": "bijnor",
+    "district": "Bijnor",
+    "districtCode": "09-04"
+  },
+  {
+    "name": "Nagina",
+    "nameHi": "नगीना",
+    "districtSlug": "bijnor",
+    "district": "Bijnor",
+    "districtCode": "09-04"
+  },
+  {
+    "name": "Dhampur",
+    "nameHi": "धामपुर",
+    "districtSlug": "bijnor",
+    "district": "Bijnor",
+    "districtCode": "09-04"
+  },
+  {
+    "name": "Chandpur",
+    "nameHi": "चांदपुर",
+    "districtSlug": "bijnor",
+    "district": "Bijnor",
+    "districtCode": "09-04"
   }
 ]
