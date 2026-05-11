@@ -1,45 +1,40 @@
 #!/usr/bin/env node
 /**
- * Gharauni.com — Phase 6 LGD Ingest Script (v2)
+ * Gharauni.com — Phase 6 LGD Ingest Script (v3)
  *
  * Ingests authoritative tehsil + block data for all 75 UP districts from the
- * Local Government Directory (LGD) via the ramseraph.github.io daily CSV mirror.
+ * Local Government Directory (LGD) via the ramSeraph/opendata GitHub Releases dump.
  *
  * Source authority chain:
  *   Ministry of Panchayati Raj → LGD (lgdirectory.gov.in) → daily scrape
- *   → ramseraph.github.io/opendata/lgd/ (mirror) → THIS SCRIPT → our repo
+ *   → github.com/ramSeraph/opendata releases (mirror) → THIS SCRIPT → our repo
  *
- * Why this mirror: LGD's own download endpoint requires browser session +
- * captcha. The ramseraph mirror is a daily cron-scraped CSV dump of the SAME
- * underlying data, served as static files (which CDNs and CI can fetch cleanly).
+ * Data format:
+ *   Each day a fresh `subdistricts.DDMonYYYY.csv.7z` is published to the
+ *   `lgd-latest` release tag. Same for `blocks.DDMonYYYY.csv.7z`. The release
+ *   asset URL with no date is also valid (GitHub redirects to the latest file).
+ *
+ * Requirements at runtime:
+ *   - node 18+ (uses native fetch)
+ *   - `7z` CLI available on PATH (apt-get install p7zip-full)
  *
  * Usage:
  *   node scripts/ingest-up-tehsils.js
+ *   DRY_RUN=1 node scripts/ingest-up-tehsils.js   # parse but don't write
  *
  * Optional env vars:
- *   LGD_BASE_URL  override mirror base (default: https://ramseraph.github.io/opendata/lgd)
- *   SUBDISTRICTS_CSV override subdistricts URL
- *   BLOCKS_CSV    override blocks URL
- *   DRY_RUN=1     parse but don't write files
+ *   SUBDISTRICTS_7Z_URL  override subdistricts 7z URL
+ *   BLOCKS_7Z_URL        override blocks 7z URL
+ *   LGD_DATE             specific date string e.g. "01Mar2026" (default: auto-pick latest)
  */
 
 const fs = require('fs');
 const path = require('path');
-const https = require('https');
+const os = require('os');
+const { execSync } = require('child_process');
 
-const LGD_BASE = process.env.LGD_BASE_URL || 'https://ramseraph.github.io/opendata/lgd';
-const CANDIDATE_SUBDISTRICT_URLS = [
-  process.env.SUBDISTRICTS_CSV,
-  `${LGD_BASE}/subdistricts.csv`,
-  `${LGD_BASE}/data/subdistricts.csv`,
-  `${LGD_BASE}/latest/subdistricts.csv`,
-].filter(Boolean);
-const CANDIDATE_BLOCK_URLS = [
-  process.env.BLOCKS_CSV,
-  `${LGD_BASE}/blocks.csv`,
-  `${LGD_BASE}/data/blocks.csv`,
-  `${LGD_BASE}/latest/blocks.csv`,
-].filter(Boolean);
+const RELEASE_BASE = 'https://github.com/ramSeraph/opendata/releases/download/lgd-latest';
+const LISTING_URL = `${RELEASE_BASE}/listing_files.csv`;
 
 const UP_STATE_CODE = '9';
 const DATA_DIR = path.join(__dirname, '..', 'lib', 'data', 'up');
@@ -54,6 +49,7 @@ const DISTRICT_NAME_TO_SLUG = {
   'PRAYAGRAJ': 'prayagraj',
   'AMBEDKAR NAGAR': 'ambedkar-nagar',
   'AMETHI': 'amethi',
+  'CHHATRAPATI SAHUJI MAHARAJ NAGAR': 'amethi',
   'AMROHA': 'amroha',
   'JYOTIBA PHULE NAGAR': 'amroha',
   'AURAIYA': 'auraiya',
@@ -144,36 +140,73 @@ const DISTRICT_NAME_TO_SLUG = {
   'VARANASI': 'varanasi',
 };
 
-function fetchUrl(url) {
-  return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Gharauni-Ingest/1.0' } }, (res) => {
-      if ([301, 302, 307, 308].includes(res.statusCode)) {
-        return fetchUrl(res.headers.location).then(resolve, reject);
-      }
-      if (res.statusCode !== 200) {
-        return reject(new Error(`HTTP ${res.statusCode} for ${url}`));
-      }
-      let body = '';
-      res.setEncoding('utf-8');
-      res.on('data', (chunk) => body += chunk);
-      res.on('end', () => resolve(body));
-    }).on('error', reject);
-  });
+/* ─── Fetch helpers ─────────────────────────────────────────────────────── */
+
+async function fetchBuffer(url) {
+  const res = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Gharauni-Ingest/3.0' } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ab = await res.arrayBuffer();
+  return Buffer.from(ab);
 }
 
-async function fetchFirstAvailable(urls, label) {
-  for (const url of urls) {
-    try {
-      console.log(`  → ${label}: trying ${url}`);
-      const body = await fetchUrl(url);
-      console.log(`  ✓ ${label}: ${body.length.toLocaleString()} bytes from ${url}`);
-      return { body, url };
-    } catch (e) {
-      console.log(`  ✗ ${label}: ${e.message}`);
-    }
-  }
-  throw new Error(`Could not fetch ${label} from any candidate URL.`);
+async function fetchText(url) {
+  const res = await fetch(url, { redirect: 'follow', headers: { 'User-Agent': 'Gharauni-Ingest/3.0' } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  return res.text();
 }
+
+/* ─── Resolve which dated file to grab ──────────────────────────────────── */
+
+async function resolveLatestFilename(prefix) {
+  // listing_files.csv has rows like: filename,sha256,size,date
+  // We grep for the prefix and pick the latest by date.
+  const fallback = `${prefix}.csv.7z`;
+  if (process.env.LGD_DATE) {
+    return `${prefix}.${process.env.LGD_DATE}.csv.7z`;
+  }
+  try {
+    const text = await fetchText(LISTING_URL);
+    const rows = text.split(/\r?\n/).filter(Boolean);
+    const matches = rows
+      .map(r => r.split(','))
+      .filter(r => r[0] && r[0].startsWith(`${prefix}.`) && r[0].endsWith('.csv.7z'))
+      .map(r => ({ name: r[0], date: r[3] || '' }))
+      .sort((a, b) => b.date.localeCompare(a.date));
+    if (matches.length === 0) {
+      console.log(`  ! listing did not contain ${prefix}.*.csv.7z — falling back to ${fallback}`);
+      return fallback;
+    }
+    console.log(`  → latest ${prefix}: ${matches[0].name} (${matches[0].date})`);
+    return matches[0].name;
+  } catch (e) {
+    console.log(`  ! could not read listing_files.csv (${e.message}) — falling back to ${fallback}`);
+    return fallback;
+  }
+}
+
+/* ─── 7z decompress ─────────────────────────────────────────────────────── */
+
+function decompress7z(buf, suggestedName) {
+  // Write to tmp file, decompress with 7z CLI, read the resulting CSV
+  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'lgd-'));
+  const archivePath = path.join(tmpDir, suggestedName);
+  fs.writeFileSync(archivePath, buf);
+  try {
+    execSync(`7z x -y -o"${tmpDir}" "${archivePath}"`, { stdio: 'pipe' });
+  } catch (e) {
+    throw new Error(`7z extraction failed (is p7zip-full installed?): ${e.message}`);
+  }
+  // Find the .csv inside the tmpDir
+  const csvFile = fs.readdirSync(tmpDir).find(f => f.toLowerCase().endsWith('.csv'));
+  if (!csvFile) throw new Error(`No .csv found after 7z extract in ${tmpDir}`);
+  const csvBody = fs.readFileSync(path.join(tmpDir, csvFile), 'utf-8');
+  // Clean up
+  for (const f of fs.readdirSync(tmpDir)) fs.unlinkSync(path.join(tmpDir, f));
+  fs.rmdirSync(tmpDir);
+  return csvBody;
+}
+
+/* ─── CSV ───────────────────────────────────────────────────────────────── */
 
 function parseCsv(text) {
   const rows = [];
@@ -206,36 +239,54 @@ function rowsToObjects(rows) {
     .map(r => Object.fromEntries(headers.map((h, i) => [h, r[i].trim()])));
 }
 
+const detectCol = (obj, candidates) => {
+  const keys = Object.keys(obj);
+  for (const cand of candidates) {
+    const found = keys.find(k => k.toLowerCase().replace(/[\s_()-]/g, '') === cand.toLowerCase().replace(/[\s_()-]/g, ''));
+    if (found) return found;
+  }
+  return null;
+};
+
+/* ─── Main ──────────────────────────────────────────────────────────────── */
+
 (async () => {
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  console.log('  Gharauni.com Phase 6 LGD Ingest v2');
+  console.log('  Gharauni.com Phase 6 LGD Ingest v3');
   console.log('  Source: Ministry of Panchayati Raj LGD');
-  console.log('  Mirror: ramseraph.github.io/opendata/lgd');
+  console.log('  Mirror: github.com/ramSeraph/opendata');
   console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
 
-  const sub = await fetchFirstAvailable(CANDIDATE_SUBDISTRICT_URLS, 'subdistricts.csv');
-  const blk = await fetchFirstAvailable(CANDIDATE_BLOCK_URLS, 'blocks.csv');
+  console.log('Resolving latest filenames…');
+  const subName = process.env.SUBDISTRICTS_7Z_URL ? null : await resolveLatestFilename('subdistricts');
+  const blkName = process.env.BLOCKS_7Z_URL ? null : await resolveLatestFilename('blocks');
 
-  console.log('\n  Parsing CSVs…');
-  const subObjs = rowsToObjects(parseCsv(sub.body));
-  const blkObjs = rowsToObjects(parseCsv(blk.body));
-  console.log(`  subdistricts.csv rows: ${subObjs.length.toLocaleString()}`);
-  console.log(`  blocks.csv rows:       ${blkObjs.length.toLocaleString()}`);
+  const subUrl = process.env.SUBDISTRICTS_7Z_URL || `${RELEASE_BASE}/${subName}`;
+  const blkUrl = process.env.BLOCKS_7Z_URL || `${RELEASE_BASE}/${blkName}`;
 
-  const detectCol = (obj, candidates) => {
-    const keys = Object.keys(obj);
-    for (const cand of candidates) {
-      const found = keys.find(k => k.toLowerCase().replace(/[\s_()-]/g, '') === cand.toLowerCase().replace(/[\s_()-]/g, ''));
-      if (found) return found;
-    }
-    return null;
-  };
+  console.log(`\nDownloading subdistricts: ${subUrl}`);
+  const subBuf = await fetchBuffer(subUrl);
+  console.log(`  ✓ ${subBuf.length.toLocaleString()} bytes`);
 
-  if (!subObjs.length) {
-    console.error('✗ subdistricts CSV had no rows after parsing.');
-    process.exit(1);
-  }
+  console.log(`Downloading blocks: ${blkUrl}`);
+  const blkBuf = await fetchBuffer(blkUrl);
+  console.log(`  ✓ ${blkBuf.length.toLocaleString()} bytes`);
 
+  console.log('\nDecompressing 7z archives…');
+  const subCsv = decompress7z(subBuf, subName || 'subdistricts.csv.7z');
+  console.log(`  ✓ subdistricts CSV: ${subCsv.length.toLocaleString()} bytes`);
+  const blkCsv = decompress7z(blkBuf, blkName || 'blocks.csv.7z');
+  console.log(`  ✓ blocks CSV:       ${blkCsv.length.toLocaleString()} bytes`);
+
+  console.log('\nParsing…');
+  const subObjs = rowsToObjects(parseCsv(subCsv));
+  const blkObjs = rowsToObjects(parseCsv(blkCsv));
+  console.log(`  subdistricts rows: ${subObjs.length.toLocaleString()}`);
+  console.log(`  blocks rows:       ${blkObjs.length.toLocaleString()}`);
+
+  if (!subObjs.length) { console.error('✗ subdistricts CSV had no rows.'); process.exit(1); }
+
+  /* Subdistricts → tehsils */
   const cols = {
     stateCode: detectCol(subObjs[0], ['StateCode', 'State Code']),
     stateName: detectCol(subObjs[0], ['StateName', 'State Name', 'State Name (In English)']),
@@ -245,14 +296,14 @@ function rowsToObjects(rows) {
     subDistName: detectCol(subObjs[0], ['SubDistrictName', 'Sub-District Name', 'Sub District Name', 'Sub-District Name (In English)']),
     subDistLocal: detectCol(subObjs[0], ['SubDistrictNameLocal', 'Sub-District Name(In Local)', 'Sub-District Name (In Local)', 'Local Name']),
   };
-  console.log('  Subdistrict columns detected:', cols);
+  console.log('  Subdistrict columns:', cols);
 
   const upSubs = subObjs.filter(o => {
     if (cols.stateCode && o[cols.stateCode] === UP_STATE_CODE) return true;
-    if (cols.stateName && o[cols.stateName].toUpperCase().includes('UTTAR PRADESH')) return true;
+    if (cols.stateName && (o[cols.stateName] || '').toUpperCase().includes('UTTAR PRADESH')) return true;
     return false;
   });
-  console.log(`\n  UP subdistricts (tehsils): ${upSubs.length}`);
+  console.log(`  UP subdistricts (tehsils): ${upSubs.length}`);
 
   const districtsArr = JSON.parse(fs.readFileSync(DISTRICTS_PATH, 'utf-8'));
   const districtBySlug = Object.fromEntries(districtsArr.map(d => [d.slug, d]));
@@ -262,10 +313,7 @@ function rowsToObjects(rows) {
   for (const o of upSubs) {
     const districtName = (o[cols.districtName] || '').toUpperCase().trim();
     const slug = DISTRICT_NAME_TO_SLUG[districtName];
-    if (!slug || !districtBySlug[slug]) {
-      unmapped.add(districtName);
-      continue;
-    }
+    if (!slug || !districtBySlug[slug]) { unmapped.add(districtName); continue; }
     const meta = districtBySlug[slug];
     tehsilsOut.push({
       name: (o[cols.subDistName] || '').trim(),
@@ -275,12 +323,15 @@ function rowsToObjects(rows) {
       districtCode: meta.code,
     });
   }
+  // Sort: by district code, then name
+  tehsilsOut.sort((a, b) => (a.districtCode + a.name).localeCompare(b.districtCode + b.name));
   console.log(`  Mapped UP tehsils: ${tehsilsOut.length}`);
   if (unmapped.size) {
-    console.log(`  Unmapped district names (review):`);
+    console.log(`  Unmapped district names (review DISTRICT_NAME_TO_SLUG):`);
     for (const u of unmapped) console.log(`    - ${u}`);
   }
 
+  /* Blocks */
   const blkCols = {
     stateCode: detectCol(blkObjs[0], ['StateCode', 'State Code']),
     stateName: detectCol(blkObjs[0], ['StateName', 'State Name', 'State Name (In English)']),
@@ -290,11 +341,11 @@ function rowsToObjects(rows) {
     blockLocal: detectCol(blkObjs[0], ['BlockNameLocal', 'Block Name(In Local)', 'Block Name (In Local)']),
     subDistName: detectCol(blkObjs[0], ['SubDistrictName', 'Sub-District Name', 'Sub District Name']),
   };
-  console.log('\n  Block columns detected:', blkCols);
+  console.log('\n  Block columns:', blkCols);
 
   const upBlocks = blkObjs.filter(o => {
     if (blkCols.stateCode && o[blkCols.stateCode] === UP_STATE_CODE) return true;
-    if (blkCols.stateName && o[blkCols.stateName].toUpperCase().includes('UTTAR PRADESH')) return true;
+    if (blkCols.stateName && (o[blkCols.stateName] || '').toUpperCase().includes('UTTAR PRADESH')) return true;
     return false;
   });
   console.log(`  UP blocks: ${upBlocks.length}`);
@@ -314,11 +365,13 @@ function rowsToObjects(rows) {
       districtCode: meta.code,
     });
   }
+  blocksOut.sort((a, b) => (a.districtCode + a.name).localeCompare(b.districtCode + b.name));
   console.log(`  Mapped UP blocks: ${blocksOut.length}`);
 
+  /* Mark which districts have detailed data now */
   const slugsWithData = new Set(tehsilsOut.map(t => t.districtSlug));
   for (const d of districtsArr) {
-    if (slugsWithData.has(d.slug)) d.hasDetailedData = true;
+    d.hasDetailedData = slugsWithData.has(d.slug);
   }
   const withData = districtsArr.filter(d => d.hasDetailedData).length;
 
@@ -341,14 +394,8 @@ function rowsToObjects(rows) {
   console.log(`  ${TEHSILS_PATH}`);
   console.log(`  ${BLOCKS_PATH}`);
   console.log(`  ${DISTRICTS_PATH}`);
-  console.log('\nNext: git add lib/data/up/ && git commit -m "Phase 6: full UP LGD ingest" && git push');
 })().catch(err => {
   console.error('\n✗ INGEST FAILED:', err.message);
-  console.error('\nFallback options:');
-  console.error('  1. Browse https://ramseraph.github.io/opendata/lgd/ for actual file paths,');
-  console.error('     then set: LGD_BASE_URL or SUBDISTRICTS_CSV + BLOCKS_CSV env vars.');
-  console.error('  2. Or download manually from https://lgdirectory.gov.in/downloadDirectory.do');
-  console.error('     (filter State=Uttar Pradesh, entity=Sub-District + Block), save CSVs,');
-  console.error('     then point env vars at file:// or local served URLs.');
+  console.error(err.stack);
   process.exit(1);
 });
