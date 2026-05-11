@@ -19,18 +19,18 @@ export default function TermsPage() {
           <p className="text-sm text-ink-500 mb-10">Effective: 10 May 2026</p>
 
           <div className="space-y-6 text-ink-800 leading-relaxed">
-            <S t="1. Acceptance">By using Gharauni.com you agree to these terms. If you don’t agree, don’t use the site.</S>
+            <S t="1. Acceptance">By using Gharauni.com you agree to these terms. If you do not agree, do not use the site.</S>
             <S t="2. What we are">
               An independent aggregator platform. We connect SVAMITVA cardholders with banks, NBFCs, insurers, and other service providers. We do not provide loans, insurance, or legal advice directly.
             </S>
             <S t="3. What we are not">
               We are not the Government of India, not the Ministry of Panchayati Raj, not affiliated with any state Bhulekh portal. We are not a bank, not an NBFC, not an insurance company.
             </S>
-            <S t="4. Accuracy of information">
-              Loan rates, insurance premiums, and Gharauni status data shown on this site are indicative. Final terms are set by the partner. We make no warranty as to completeness or accuracy of third-party data.
+            <S t="4. Service availability">
+              Gharauni.com is in early launch. Several listed services (title verification, parser API, insurance comparison, dispute lawyer network, marketplace) are currently in waitlist mode. Submitting a form for these services does not create a transactional obligation — we will notify you when the service launches.
             </S>
-            <S t="5. Service availability">
-              The site is provided “as is.” We may suspend or modify services without notice. We are not liable for downtime, data errors, or losses arising from service unavailability.
+            <S t="5. Accuracy of information">
+              Loan rates, insurance premiums, and Gharauni status data shown on this site are indicative. Final terms are set by the partner. We make no warranty as to completeness or accuracy of third-party data.
             </S>
             <S t="6. User responsibilities">
               <ul className="list-disc pl-6 space-y-1">
@@ -49,7 +49,7 @@ export default function TermsPage() {
               These terms are governed by the laws of India. Any dispute will be resolved in the courts of New Delhi.
             </S>
             <S t="10. Contact">
-              <p>Email: <a href="mailto:legal@gharauni.com" className="text-terracotta-600 underline">legal@gharauni.com</a></p>
+              <p>For all inquiries, including legal: use our <Link href="/contact" className="text-terracotta-600 underline">contact form</Link> and select the appropriate topic.</p>
             </S>
           </div>
 

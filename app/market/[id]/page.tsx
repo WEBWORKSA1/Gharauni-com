@@ -3,11 +3,11 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, CheckCircle2, MapPin, Calendar, Home, Phone, Loader2 } from 'lucide-react';
+import { ArrowLeft, CheckCircle2, MapPin, Calendar, Home, Loader2, AlertCircle } from 'lucide-react';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
-import { getListing, submitLead } from '@/lib/api';
-import { validatePhone, formatINR } from '@/lib/utils';
+import { getListing } from '@/lib/api';
+import { formatINR } from '@/lib/utils';
 import { ROUTES } from '@/lib/constants';
 import type { Listing } from '@/lib/types';
 
@@ -17,33 +17,10 @@ export default function ListingDetailPage() {
 
   const [listing, setListing] = useState<Listing | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showContact, setShowContact] = useState(false);
-  const [form, setForm] = useState({ name: '', phone: '' });
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     getListing(id).then(l => { setListing(l); setLoading(false); });
   }, [id]);
-
-  const onContact = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validatePhone(form.phone)) {
-      alert('सही मोबाइल नंबर डालें');
-      return;
-    }
-    setSubmitting(true);
-    await submitLead({
-      intent: 'market',
-      name: form.name,
-      phone: form.phone,
-      cardId: id,
-      source: `market/${id}`,
-      createdAt: new Date().toISOString()
-    });
-    setSubmitting(false);
-    setSubmitted(true);
-  };
 
   if (loading) {
     return (
@@ -79,13 +56,21 @@ export default function ListingDetailPage() {
             <ArrowLeft size={16} /> Back to listings
           </Link>
 
+          {/* Preview banner */}
+          <div className="mb-6 rounded-md bg-amber-50 border border-amber-200 px-4 py-3 text-sm text-amber-900 flex items-start gap-3">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <div>
+              <strong className="font-medium">Marketplace preview.</strong> Sample listings shown to illustrate the product. The verified-by-Gharauni marketplace launches Q3 2026. Submit an enquiry to join the buyer waitlist for this property type and district.
+            </div>
+          </div>
+
           {/* HERO IMAGE */}
           <div
             className="h-72 lg:h-96 mb-8 flex items-end p-8 relative"
             style={{ background: 'linear-gradient(135deg, #C2410C 0%, #7C2D12 100%)' }}
           >
-            <div className="absolute top-6 right-6 bg-ivory-50 text-accent-green px-3 py-1.5 text-[12px] font-semibold flex items-center gap-1.5">
-              <CheckCircle2 size={14} /> VERIFIED · GHARAUNI-ID MATCH
+            <div className="absolute top-6 right-6 bg-ivory-50 text-ink-900 px-3 py-1.5 text-[11px] font-medium">
+              SAMPLE LISTING · PREVIEW
             </div>
             <div>
               <div className="mono text-sm text-ivory-100 mb-2">{listing.id}</div>
@@ -111,51 +96,33 @@ export default function ListingDetailPage() {
                 <Stat icon={Calendar} label="Posted" value={formatPosted(listing.postedAt)} />
               </div>
 
-              <h2 className="display text-2xl mb-3">विवरण</h2>
+              <h2 className="display text-2xl mb-3">About this property type</h2>
               <p className="text-ink-700 leading-relaxed mb-5">
-                {listing.village} में स्थित {listing.areaSqft.toLocaleString('en-IN')} वर्ग फुट की वेरिफाइड SVAMITVA संपत्ति। 13-अंक की घरौनी ID के साथ पूर्ण कानूनी दस्तावेज़। खरीदी पर तुरंत नामांतरण होगा।
+                {listing.village} (district {listing.district}, {listing.state}) is in an area covered by the SVAMITVA Scheme. Once our marketplace goes live, properties from this region will appear with verified 13-digit Gharauni IDs and a complete title-check report.
               </p>
               <p className="text-ink-700 leading-relaxed">
-                यह संपत्ति हमारे टाइटल वेरिफिकेशन से गुज़री है — कोई विवाद, ओवरलैप, या छुपा बंधक नहीं।
+                The areas, prices, and IDs shown here are realistic samples to illustrate what listings will look like — not actual properties for sale today.
               </p>
             </div>
 
-            {/* CONTACT CARD */}
+            {/* CONTACT CARD — redirects to waitlist form */}
             <aside className="bg-ivory-50 p-7 border-[1.5px] border-ivory-200 h-fit lg:sticky lg:top-24">
-              {!showContact && !submitted && (
-                <>
-                  <h3 className="display text-2xl mb-2">मालिक से संपर्क करें</h3>
-                  <p className="text-sm text-ink-700 mb-5">Free · No middleman · Direct contact</p>
-                  <button onClick={() => setShowContact(true)} className="btn-primary w-full inline-flex items-center justify-center gap-2">
-                    <Phone size={16} /> नंबर देखें
-                  </button>
-                </>
-              )}
-              {showContact && !submitted && (
-                <form onSubmit={onContact}>
-                  <h3 className="display text-2xl mb-2">अपनी जानकारी दें</h3>
-                  <p className="text-sm text-ink-700 mb-5">मालिक का नंबर SMS पर भेज दिया जाएगा।</p>
-                  <div className="space-y-3 mb-4">
-                    <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="आपका नाम" className="input-base" />
-                    <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="मोबाइल" className="input-base" />
-                  </div>
-                  <button type="submit" disabled={submitting} className="btn-primary w-full disabled:opacity-60">
-                    {submitting ? 'जमा...' : 'SMS भेजें'}
-                  </button>
-                </form>
-              )}
-              {submitted && (
-                <div className="text-center">
-                  <CheckCircle2 size={48} className="text-accent-green mx-auto mb-3" />
-                  <div className="display text-xl mb-2">SMS भेजा गया!</div>
-                  <p className="text-sm text-ink-700">मालिक का नंबर आपके फ़ोन पर SMS कर दिया गया है।</p>
-                </div>
-              )}
+              <h3 className="display text-2xl mb-2">Join the buyer waitlist</h3>
+              <p className="text-sm text-ink-700 mb-5">
+                Tell us what you are looking for. When verified listings matching your district and budget go live, we will notify you first.
+              </p>
+              <Link
+                href={`/market/${listing.id}/contact`}
+                className="btn-primary w-full inline-flex items-center justify-center gap-2"
+              >
+                Tell us what you want
+              </Link>
               <div className="mt-6 pt-6 border-t border-ivory-200">
-                <div className="mono text-[11px] text-ink-500 tracking-wider mb-3">VERIFIED VIA</div>
-                <div className="text-sm text-ink-700">✓ SVAMITVA registry match</div>
-                <div className="text-sm text-ink-700">✓ Bhulekh cross-check</div>
-                <div className="text-sm text-ink-700">✓ No active disputes</div>
+                <div className="mono text-[11px] text-ink-500 tracking-wider mb-3">WHEN LISTINGS GO LIVE</div>
+                <div className="text-sm text-ink-700">• SVAMITVA registry match</div>
+                <div className="text-sm text-ink-700">• Bhulekh cross-check</div>
+                <div className="text-sm text-ink-700">• Dispute scan</div>
+                <div className="text-xs text-ink-500 mt-3">Every listing will have these checks before publication. We will not publish unverified inventory.</div>
               </div>
             </aside>
           </div>

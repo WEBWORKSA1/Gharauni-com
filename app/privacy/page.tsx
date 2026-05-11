@@ -45,12 +45,12 @@ export default function PrivacyPage() {
             </Section>
             <Section title="5. Your rights under DPDP Act">
               <ul className="list-disc pl-6 space-y-1">
-                <li><strong>Access:</strong> Email us to receive a copy of what we hold on you.</li>
-                <li><strong>Correction:</strong> Email us to fix any inaccurate data.</li>
-                <li><strong>Erasure:</strong> Email us to delete your data (subject to lender retention rules).</li>
+                <li><strong>Access:</strong> Submit our contact form to receive a copy of what we hold on you.</li>
+                <li><strong>Correction:</strong> Submit our contact form to fix any inaccurate data.</li>
+                <li><strong>Erasure:</strong> Submit our contact form to delete your data (subject to lender retention rules).</li>
                 <li><strong>Withdraw consent:</strong> You may withdraw consent for marketing communication anytime.</li>
               </ul>
-              <p>Email: <a href="mailto:privacy@gharauni.com" className="text-terracotta-600 underline">privacy@gharauni.com</a></p>
+              <p>To exercise any of these rights, use our <Link href="/contact" className="text-terracotta-600 underline">contact form</Link> and select “Legal / privacy / DPDP request” as the topic. We respond within one business day.</p>
             </Section>
             <Section title="6. Data retention">
               We retain lead data for up to 24 months from last activity. Analytics data is anonymized after 14 months.
@@ -65,8 +65,8 @@ export default function PrivacyPage() {
               We will update this page when policies change. Material changes will be notified via banner on the homepage.
             </Section>
             <Section title="10. Contact">
-              <p>Data Protection Officer · WebWorks</p>
-              <p>Email: <a href="mailto:privacy@gharauni.com" className="text-terracotta-600 underline">privacy@gharauni.com</a></p>
+              <p>Data Protection Officer · WebWorks (Gharauni Platform)</p>
+              <p>Use our <Link href="/contact" className="text-terracotta-600 underline">contact form</Link> and select “Legal / privacy / DPDP request”.</p>
             </Section>
           </div>
 
