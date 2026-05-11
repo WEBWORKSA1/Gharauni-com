@@ -2,203 +2,228 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Search, CheckCircle2, AlertCircle, Download, MapPin, ArrowRight, Loader2 } from 'lucide-react';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
-import { Seal } from '@/components/seal';
-import { STATES } from '@/lib/mock-data';
-import { checkStatus } from '@/lib/api';
-import { validateGharauniId, formatINR } from '@/lib/utils';
-import { ROUTES } from '@/lib/constants';
-import type { GharauniCard } from '@/lib/types';
+import { useRouter } from 'next/navigation';
+import { Search, MapPin, FileText, Clock, Shield, CheckCircle2, ChevronRight, Info } from 'lucide-react';
+import { Shell } from '@/components/shell';
+import { CardMockup } from '@/components/card-mockup';
 
 export default function CheckPage() {
-  const [form, setForm] = useState({ state: '', district: '', village: '', cardId: '' });
-  const [result, setResult] = useState<GharauniCard | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [state, setState] = useState('');
+  const [district, setDistrict] = useState('');
+  const [tehsil, setTehsil] = useState('');
+  const [village, setVillage] = useState('');
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const canSubmit = state && district && village.trim().length >= 2;
+
+  const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
-
-    if (form.cardId && !validateGharauniId(form.cardId)) {
-      setError('घरौनी ID का सही फॉर्मैट: 274612-04567-08');
-      return;
-    }
-
-    setLoading(true);
-    try {
-      const card = await checkStatus(form);
-      setResult(card);
-    } catch (err) {
-      setError('कुछ गलत हुआ। दुबारा कोशिश करें।');
-    } finally {
-      setLoading(false);
-    }
+    if (!canSubmit) return;
+    const params = new URLSearchParams({ state, district, tehsil, village: village.trim() });
+    router.push(`/check/result?${params.toString()}`);
   };
 
   return (
-    <>
-      <Nav />
-      <section className="py-20 px-6 min-h-[70vh]">
-        <div className="max-w-3xl mx-auto">
-          <div className="mono text-xs text-terracotta-600 tracking-widest mb-3">SERVICE · STATUS CHECK</div>
-          <h1 className="display text-4xl sm:text-5xl m-0 mb-3 leading-tight">अपनी घरौनी की स्थिति जाँचें</h1>
-          <p className="text-lg text-ink-700 mb-10 leading-relaxed">
-            13 अंकों की घरौनी ID डालें या गाँव का नाम। जाँच मुफ़्त है।
-          </p>
-
-          <form onSubmit={onSubmit} className="bg-ivory-50 p-8 border-[1.5px] border-ivory-200">
-            <div className="grid gap-5">
-              <div>
-                <label className="mono text-[11px] text-ink-500 tracking-wider block mb-1.5">
-                  राज्य चुनें *
-                </label>
-                <select
-                  required
-                  value={form.state}
-                  onChange={e => setForm({ ...form, state: e.target.value })}
-                  className="input-base"
-                >
-                  <option value="">— चुनें —</option>
-                  {STATES.map(s => (
-                    <option key={s.code} value={s.name}>{s.nameHi} · {s.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="mono text-[11px] text-ink-500 tracking-wider block mb-1.5">ज़िला</label>
-                  <input
-                    type="text"
-                    value={form.district}
-                    onChange={e => setForm({ ...form, district: e.target.value })}
-                    className="input-base"
-                    placeholder="पूर्णिया, कानपुर, भोपाल..."
-                  />
-                </div>
-                <div>
-                  <label className="mono text-[11px] text-ink-500 tracking-wider block mb-1.5">गाँव *</label>
-                  <input
-                    type="text"
-                    required
-                    value={form.village}
-                    onChange={e => setForm({ ...form, village: e.target.value })}
-                    className="input-base"
-                    placeholder="भरतपुर, वाडगाँव..."
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="mono text-[11px] text-ink-500 tracking-wider block mb-1.5">
-                  घरौनी ID (वैकल्पिक — अगर याद हो)
-                </label>
-                <input
-                  type="text"
-                  value={form.cardId}
-                  onChange={e => setForm({ ...form, cardId: e.target.value })}
-                  className="input-base mono"
-                  placeholder="274612-04567-08"
-                />
-              </div>
-
-              {error && (
-                <div className="flex items-start gap-2.5 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">
-                  <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
-                  <span>{error}</span>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-60"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 size={18} className="animate-spin" />
-                    खोज रहे हैं...
-                  </>
-                ) : (
-                  <>
-                    <Search size={18} />
-                    जाँचें
-                  </>
-                )}
-              </button>
+    <Shell>
+      {/* Hero */}
+      <section className="border-b border-ink/10 bg-paper">
+        <div className="absolute inset-0 bg-gradient-to-br from-terracotta/8 via-paper to-paper pointer-events-none" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-6 py-14">
+          <div className="max-w-2xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-terracotta/30 bg-terracotta/5 px-3 py-1 text-xs font-medium text-terracotta mb-4">
+              <Search className="w-3.5 h-3.5" />
+              <span>Free · 30 seconds · No Aadhaar OTP</span>
             </div>
-          </form>
-
-          {result && (
-            <div className="animate-fade-up mt-8 bg-ink-900 text-ivory-50 p-8">
-              <div className="flex justify-between items-start mb-6 pb-4 border-b border-dashed border-ink-700">
-                <div>
-                  <div className="mono text-[11px] text-ink-400 tracking-wider">SVAMITVA STATUS</div>
-                  <div className="flex items-center gap-2 mt-1.5">
-                    <CheckCircle2 size={20} className="text-accent-green" />
-                    <span className="display text-2xl text-accent-green">READY · LOAN-ELIGIBLE</span>
-                  </div>
-                </div>
-                <Seal />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <ResultField label="OWNER" value={result.owner} />
-                <ResultField label="VILLAGE" value={result.village} />
-                <ResultField label="GHARAUNI ID" value={result.cardId} mono accent />
-                <ResultField label="AREA" value={result.area} />
-                <ResultField label="STATE" value={result.state} />
-                <ResultField label="ISSUED" value={result.issued} mono />
-              </div>
-
-              {result.eligibilityMin && result.eligibilityMax && (
-                <div className="mt-6 p-4 bg-terracotta-600 flex justify-between items-center flex-wrap gap-3">
-                  <div>
-                    <div className="text-sm text-ivory-100">आपको इतना लोन मिल सकता है:</div>
-                    <div className="display text-3xl mt-1">
-                      {formatINR(result.eligibilityMin, true)} — {formatINR(result.eligibilityMax, true)}
-                    </div>
-                  </div>
-                  <Link
-                    href={ROUTES.loan}
-                    className="bg-ivory-50 text-terracotta-600 px-6 py-3 font-semibold inline-flex items-center gap-1.5 hover:bg-ivory-100 transition"
-                  >
-                    लोन ऑफ़र देखें <ArrowRight size={16} />
-                  </Link>
-                </div>
-              )}
-
-              <div className="mt-4 flex flex-wrap gap-3">
-                <button className="bg-transparent text-ivory-50 px-5 py-2.5 border border-ink-700 hover:border-ivory-50 transition flex items-center gap-1.5 text-sm">
-                  <Download size={14} /> Download PDF
-                </button>
-                <button className="bg-transparent text-ivory-50 px-5 py-2.5 border border-ink-700 hover:border-ivory-50 transition flex items-center gap-1.5 text-sm">
-                  <MapPin size={14} /> View on Map
-                </button>
-              </div>
-            </div>
-          )}
-
-          <div className="mt-10 p-5 bg-ivory-100 border border-dashed border-terracotta-500 text-sm text-ink-700 leading-relaxed">
-            <strong className="text-terracotta-600">नोट:</strong> एपीआई एकीकरण फ़ेज़ 4 में जारी। वर्तमान में mock डाटा। प्रोडक्शन में SVAMITVA केंद्रीय रजिस्ट्री और राज्य भूलेख पोर्टलों के साथ hook किया जाएगा।
+            <h1 className="font-serif text-4xl lg:text-5xl text-ink leading-tight">
+              अपनी <span className="text-terracotta">घरौनी</span> की जाँच करें
+            </h1>
+            <p className="mt-2 font-serif text-lg text-ink/70 italic">Check your Gharauni status</p>
+            <p className="mt-4 text-ink/75">
+              अपना राज्य, जिला, तहसील, और गाँव चुनें। हम SVAMITVA के सरकारी पोर्टल से आपके कार्ड की स्थिति जाँचेंगे।
+            </p>
           </div>
         </div>
       </section>
-      <Footer />
-    </>
-  );
-}
 
-function ResultField({ label, value, mono, accent }: { label: string; value: string; mono?: boolean; accent?: boolean }) {
-  return (
-    <div>
-      <div className="mono text-[11px] text-ink-400 tracking-wider">{label}</div>
-      <div className={`mt-0.5 font-semibold text-[17px] ${mono ? 'mono' : ''} ${accent ? 'text-amber-300' : 'text-ivory-50'}`}>
-        {value}
-      </div>
-    </div>
+      {/* Form + Preview */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-7xl px-6 py-12 grid lg:grid-cols-[1.3fr_1fr] gap-10 lg:gap-14 items-start">
+          {/* Form */}
+          <form onSubmit={onSubmit} className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
+            <h2 className="font-serif text-2xl text-ink mb-1">अपना पता भरें · Fill your address</h2>
+            <p className="text-sm text-ink/60 mb-7">All fields except tehsil are required.</p>
+
+            <div className="space-y-5">
+              {/* State */}
+              <div>
+                <label htmlFor="state" className="block text-sm font-medium text-ink mb-1.5">राज्य · State <span className="text-terracotta">*</span></label>
+                <select
+                  id="state"
+                  value={state}
+                  onChange={(e) => { setState(e.target.value); setDistrict(''); setTehsil(''); }}
+                  required
+                  className="w-full rounded-md border border-ink/15 bg-paper px-3 py-2.5 text-ink focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none"
+                >
+                  <option value="">राज्य चुनें…</option>
+                  <option value="uttar-pradesh">Uttar Pradesh · उत्तर प्रदेश</option>
+                  <option value="madhya-pradesh" disabled>Madhya Pradesh (coming soon)</option>
+                  <option value="maharashtra" disabled>Maharashtra (coming soon)</option>
+                  <option value="karnataka" disabled>Karnataka (coming soon)</option>
+                  <option value="haryana" disabled>Haryana (coming soon)</option>
+                  <option value="rajasthan" disabled>Rajasthan (coming soon)</option>
+                </select>
+              </div>
+
+              {/* District (linked) */}
+              <div>
+                <label htmlFor="district" className="block text-sm font-medium text-ink mb-1.5">जिला · District <span className="text-terracotta">*</span></label>
+                <input
+                  id="district"
+                  type="text"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  disabled={!state}
+                  placeholder={state ? 'e.g. Meerut, Lucknow, Prayagraj' : 'Select state first'}
+                  required
+                  className="w-full rounded-md border border-ink/15 bg-paper px-3 py-2.5 text-ink placeholder:text-ink/35 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none disabled:bg-ink/[0.03] disabled:cursor-not-allowed"
+                />
+                {state === 'uttar-pradesh' && (
+                  <Link href="/uttar-pradesh" className="mt-1.5 inline-flex items-center gap-1 text-xs text-terracotta hover:underline">
+                    Browse all 75 UP districts <ChevronRight className="w-3 h-3" />
+                  </Link>
+                )}
+              </div>
+
+              {/* Tehsil (optional) */}
+              <div>
+                <label htmlFor="tehsil" className="block text-sm font-medium text-ink mb-1.5">तहसील · Tehsil <span className="text-ink/40 text-xs">(optional)</span></label>
+                <input
+                  id="tehsil"
+                  type="text"
+                  value={tehsil}
+                  onChange={(e) => setTehsil(e.target.value)}
+                  disabled={!district}
+                  placeholder={district ? 'e.g. Sardhana, Mohanlalganj' : 'Enter district first'}
+                  className="w-full rounded-md border border-ink/15 bg-paper px-3 py-2.5 text-ink placeholder:text-ink/35 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none disabled:bg-ink/[0.03] disabled:cursor-not-allowed"
+                />
+              </div>
+
+              {/* Village */}
+              <div>
+                <label htmlFor="village" className="block text-sm font-medium text-ink mb-1.5">गाँव · Village <span className="text-terracotta">*</span></label>
+                <input
+                  id="village"
+                  type="text"
+                  value={village}
+                  onChange={(e) => setVillage(e.target.value)}
+                  disabled={!district}
+                  placeholder={district ? 'Type your village name' : 'Enter district first'}
+                  required
+                  className="w-full rounded-md border border-ink/15 bg-paper px-3 py-2.5 text-ink placeholder:text-ink/35 focus:border-terracotta focus:ring-2 focus:ring-terracotta/20 outline-none disabled:bg-ink/[0.03] disabled:cursor-not-allowed"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={!canSubmit}
+                className="w-full mt-3 inline-flex items-center justify-center gap-2 rounded-md bg-terracotta px-6 py-3.5 text-white font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              >
+                <Search className="w-4 h-4" />
+                जाँच करें · Check Status
+              </button>
+
+              <div className="flex items-start gap-2 rounded-md bg-blue-50 border border-blue-100 px-3 py-2.5 text-xs text-blue-900">
+                <Info className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" />
+                <span>We never ask for your Aadhaar number, OTP, or any private data. We query the public SVAMITVA portal on your behalf.</span>
+              </div>
+            </div>
+          </form>
+
+          {/* Preview pane: what you'll get */}
+          <div className="space-y-6">
+            <div>
+              <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">What you'll get back</div>
+              <h3 className="font-serif text-xl text-ink mb-4">जाँच के बाद आपको यह मिलेगा</h3>
+            </div>
+
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center flex-shrink-0">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium text-ink">Card status</div>
+                  <div className="text-sm text-ink/65">Is your Gharauni issued, pending, or not yet processed?</div>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center flex-shrink-0">
+                  <FileText className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium text-ink">Card details</div>
+                  <div className="text-sm text-ink/65">13-digit unique ID, plot number, area, registered owner name.</div>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium text-ink">Map location</div>
+                  <div className="text-sm text-ink/65">GPS coordinates of your plot as captured by the drone survey.</div>
+                </div>
+              </li>
+              <li className="flex items-start gap-3">
+                <div className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center flex-shrink-0">
+                  <Clock className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-medium text-ink">Next steps</div>
+                  <div className="text-sm text-ink/65">Eligible lenders, estimated loan amount, or what to do if your card is pending.</div>
+                </div>
+              </li>
+            </ul>
+
+            {/* Sample card preview */}
+            <div className="pt-4 border-t border-ink/10">
+              <div className="text-xs text-ink/50 mb-3">Example Gharauni card:</div>
+              <div className="scale-90 origin-top-left">
+                <CardMockup />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust band */}
+      <section className="border-t border-ink/10 bg-ink/[0.015]">
+        <div className="mx-auto max-w-7xl px-6 py-10">
+          <div className="grid sm:grid-cols-3 gap-6 text-sm">
+            <div className="flex items-start gap-3">
+              <Shield className="w-5 h-5 text-terracotta flex-shrink-0" />
+              <div>
+                <div className="font-medium text-ink">DPDP Act 2023 compliant</div>
+                <div className="text-xs text-ink/60 mt-0.5">Your data is processed under India's Digital Personal Data Protection Act.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="w-5 h-5 text-terracotta flex-shrink-0" />
+              <div>
+                <div className="font-medium text-ink">Source: MoPR official portal</div>
+                <div className="text-xs text-ink/60 mt-0.5">Data sourced from Ministry of Panchayati Raj's SVAMITVA database.</div>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-terracotta flex-shrink-0" />
+              <div>
+                <div className="font-medium text-ink">Pending data, type freely</div>
+                <div className="text-xs text-ink/60 mt-0.5">Even if your tehsil isn't in our dropdown yet, type the village name — we'll find it.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </Shell>
   );
 }

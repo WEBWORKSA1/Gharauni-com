@@ -2,178 +2,254 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Star, ArrowRight, Filter } from 'lucide-react';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
+import { ArrowRight, CheckCircle, Calculator, Filter, IndianRupee, Clock, Percent, Award } from 'lucide-react';
+import { Shell } from '@/components/shell';
 import { LENDERS } from '@/lib/mock-data';
-import { calculateEMI, calculateTotalInterest, formatINR } from '@/lib/utils';
-import { ROUTES } from '@/lib/constants';
 
-type SortKey = 'rate' | 'amount' | 'rating';
+type SortKey = 'rate' | 'processing' | 'amount';
 
 export default function LoanPage() {
-  const [amount, setAmount] = useState(500000);
-  const [tenure, setTenure] = useState(10);
+  const [amount, setAmount] = useState(500000);    // ₹5L default
+  const [tenure, setTenure] = useState(60);         // 60 months default
   const [sortBy, setSortBy] = useState<SortKey>('rate');
 
-  const sorted = useMemo(() => {
-    const arr = [...LENDERS];
-    if (sortBy === 'rate') arr.sort((a, b) => a.rateNum - b.rateNum);
-    if (sortBy === 'amount') arr.sort((a, b) => b.maxAmtNum - a.maxAmtNum);
-    if (sortBy === 'rating') arr.sort((a, b) => b.rating - a.rating);
-    return arr;
-  }, [sortBy]);
+  // EMI = P × r × (1+r)^n / ((1+r)^n - 1) where r is monthly rate
+  const calcEMI = (rate: number, principal: number, months: number) => {
+    const r = rate / 12 / 100;
+    const n = months;
+    const emi = (principal * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+    return Math.round(emi);
+  };
 
-  const bestRate = Math.min(...LENDERS.map(l => l.rateNum));
-  const bestEMI = calculateEMI(amount, bestRate, tenure);
-  const bestInterest = calculateTotalInterest(bestEMI, tenure, amount);
+  const sortedLenders = useMemo(() => {
+    const enriched = LENDERS.map((l) => ({
+      ...l,
+      emi: calcEMI(l.rate, amount, tenure),
+      totalPayable: calcEMI(l.rate, amount, tenure) * tenure,
+      interestPayable: calcEMI(l.rate, amount, tenure) * tenure - amount,
+    }));
+    return enriched.sort((a, b) => {
+      if (sortBy === 'rate') return a.rate - b.rate;
+      if (sortBy === 'processing') return a.processingFee - b.processingFee;
+      return b.maxAmount - a.maxAmount;
+    });
+  }, [amount, tenure, sortBy]);
+
+  const cheapest = sortedLenders[0];
+  const inrFmt = (n: number) => `₹${n.toLocaleString('en-IN')}`;
 
   return (
-    <>
-      <Nav />
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mono text-xs text-terracotta-600 tracking-widest mb-3">SERVICE · LOAN COMPARISON</div>
-          <h1 className="display text-4xl sm:text-5xl m-0 mb-3 leading-tight">घरौनी पर लोन — 11 लेंडरों की तुलना</h1>
-          <p className="text-lg text-ink-700 mb-10 leading-relaxed max-w-2xl">
-            9.5% से शुरू। 60 सेकंड में मंज़ूरी। अधिकतम ₹75 लाख तक संपत्ति बंधक।
-          </p>
-
-          {/* EMI CALCULATOR */}
-          <div className="bg-ink-900 text-ivory-50 p-8 mb-8">
-            <div className="grid lg:grid-cols-3 gap-8">
-              <div>
-                <label className="mono text-[11px] text-ink-400 tracking-wider">LOAN AMOUNT</label>
-                <div className="display text-4xl mt-1">{formatINR(amount, true)}</div>
-                <input
-                  type="range"
-                  min={100000}
-                  max={7500000}
-                  step={50000}
-                  value={amount}
-                  onChange={e => setAmount(+e.target.value)}
-                  className="w-full mt-3 accent-terracotta-500"
-                />
-                <div className="flex justify-between mono text-[10px] text-ink-400 mt-1">
-                  <span>₹1L</span><span>₹75L</span>
-                </div>
-              </div>
-              <div>
-                <label className="mono text-[11px] text-ink-400 tracking-wider">TENURE</label>
-                <div className="display text-4xl mt-1">{tenure} years</div>
-                <input
-                  type="range"
-                  min={1}
-                  max={25}
-                  step={1}
-                  value={tenure}
-                  onChange={e => setTenure(+e.target.value)}
-                  className="w-full mt-3 accent-terracotta-500"
-                />
-                <div className="flex justify-between mono text-[10px] text-ink-400 mt-1">
-                  <span>1y</span><span>25y</span>
-                </div>
-              </div>
-              <div className="lg:border-l border-ink-800 lg:pl-8">
-                <label className="mono text-[11px] text-ink-400 tracking-wider">BEST EMI @ {bestRate}%</label>
-                <div className="display text-4xl mt-1 text-amber-300">{formatINR(bestEMI)}</div>
-                <div className="text-sm text-ink-400 mt-2">
-                  Total interest: {formatINR(bestInterest, true)}
-                </div>
-                <div className="text-xs text-ink-500 mt-1">
-                  Total payable: {formatINR(bestEMI * tenure * 12, true)}
-                </div>
-              </div>
+    <Shell>
+      {/* Hero */}
+      <section className="border-b border-ink/10 bg-paper">
+        <div className="absolute inset-0 bg-gradient-to-br from-terracotta/8 via-paper to-paper pointer-events-none" aria-hidden />
+        <div className="relative mx-auto max-w-7xl px-6 py-14 lg:py-16">
+          <div className="max-w-3xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-terracotta/30 bg-terracotta/5 px-3 py-1 text-xs font-medium text-terracotta mb-5">
+              <Award className="w-3.5 h-3.5" />
+              <span>11 RBI-registered lenders · Compare in 30 seconds</span>
             </div>
-          </div>
-
-          {/* SORT BAR */}
-          <div className="flex gap-2 mb-6 flex-wrap items-center">
-            <span className="mono text-xs text-ink-500 tracking-wider flex items-center gap-1.5">
-              <Filter size={14} /> SORT BY:
-            </span>
-            {[
-              { k: 'rate' as const, l: 'Lowest Rate' },
-              { k: 'amount' as const, l: 'Highest Amount' },
-              { k: 'rating' as const, l: 'Top Rated' }
-            ].map(s => (
-              <button
-                key={s.k}
-                onClick={() => setSortBy(s.k)}
-                className={`px-4 py-1.5 text-[13px] font-semibold border transition ${
-                  sortBy === s.k
-                    ? 'bg-terracotta-600 text-ivory-50 border-terracotta-600'
-                    : 'bg-transparent text-terracotta-600 border-terracotta-600 hover:bg-terracotta-600/10'
-                }`}
-                style={{ borderRadius: 2 }}
-              >
-                {s.l}
-              </button>
-            ))}
-          </div>
-
-          {/* LENDER CARDS */}
-          <div className="grid gap-4">
-            {sorted.map(l => {
-              const lEMI = calculateEMI(Math.min(amount, l.maxAmtNum), l.rateNum, tenure);
-              return (
-                <div
-                  key={l.id}
-                  className="hover-lift bg-ivory-50 border-[1.5px] border-ivory-200 p-6 grid grid-cols-[auto_1fr_auto_auto] gap-6 items-center"
-                  style={{ gridTemplateColumns: 'auto 1.5fr 1fr auto' }}
-                >
-                  <div
-                    className="w-16 h-16 flex items-center justify-center mono text-lg font-bold text-ivory-50"
-                    style={{ background: l.color }}
-                  >
-                    {l.logo}
-                  </div>
-                  <div>
-                    <div className="flex gap-2.5 items-center mb-1.5 flex-wrap">
-                      <div className="display text-2xl">{l.name}</div>
-                      {l.badge && (
-                        <span className="bg-amber-300 text-ink-900 px-2.5 py-0.5 text-[11px] font-semibold tracking-wider mono uppercase">
-                          {l.badge}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex gap-1.5 items-center text-[13px] text-ink-700 flex-wrap">
-                      <Star size={14} fill="#FBBF24" className="text-amber-300" />
-                      <span>{l.rating}</span>
-                      <span>· Processing {l.processing}</span>
-                      <span>· Up to {l.tenure}</span>
-                    </div>
-                    <div className="text-[13px] text-terracotta-600 mt-2 mono">
-                      EMI @ this lender: {formatINR(lEMI)}/mo
-                    </div>
-                  </div>
-                  <div className="hidden md:grid grid-cols-2 gap-4">
-                    <div>
-                      <div className="mono text-[10px] text-ink-500">RATE</div>
-                      <div className="display text-2xl text-terracotta-600">{l.rate}</div>
-                    </div>
-                    <div>
-                      <div className="mono text-[10px] text-ink-500">MAX</div>
-                      <div className="display text-2xl">{l.maxAmt}</div>
-                    </div>
-                  </div>
-                  <Link
-                    href={`${ROUTES.loan}/apply/${l.id}`}
-                    className="btn-primary inline-flex items-center gap-1.5 whitespace-nowrap"
-                  >
-                    आवेदन <ArrowRight size={14} />
-                  </Link>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="mt-10 p-5 bg-ivory-100 border border-dashed border-terracotta-500 text-sm text-ink-700 leading-relaxed">
-            <strong className="text-terracotta-600">Disclosure:</strong> Gharauni.com is an aggregator. Rates shown are indicative and subject to lender verification. Final rate depends on credit score, property valuation, and lender policy. We earn affiliate commission — you pay nothing.
+            <h1 className="font-serif text-4xl lg:text-5xl text-ink leading-tight">
+              घरौनी पर लोन। <span className="text-terracotta">सबसे कम ब्याज।</span>
+            </h1>
+            <p className="mt-2 font-serif text-lg text-ink/70 italic">Loan against your Gharauni. Lowest rate available.</p>
+            <p className="mt-4 text-ink/75 max-w-2xl">
+              अपनी SVAMITVA संपत्ति कार्ड के खिलाफ ₹2 लाख से ₹50 लाख तक का लोन लें। चुनें वह बैंक जो आपके लिए सबसे सस्ता है। कोई शुल्क नहीं, कोई OTP नहीं।
+            </p>
           </div>
         </div>
       </section>
-      <Footer />
-    </>
+
+      {/* EMI Calculator */}
+      <section className="border-b border-ink/10 bg-ink/[0.015]">
+        <div className="mx-auto max-w-7xl px-6 py-12">
+          <div className="grid lg:grid-cols-[1.2fr_1fr] gap-10 lg:gap-14">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <Calculator className="w-4 h-4 text-terracotta" />
+                <span className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium">EMI Calculator</span>
+              </div>
+              <h2 className="font-serif text-2xl lg:text-3xl text-ink">कितनी EMI होगी? Calculate your monthly payment.</h2>
+              <p className="mt-2 text-sm text-ink/60">Move the sliders. Rates update in real time below.</p>
+
+              {/* Amount slider */}
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-medium text-ink">राशि · Loan Amount</label>
+                  <span className="font-serif text-lg text-terracotta">{inrFmt(amount)}</span>
+                </div>
+                <input
+                  type="range"
+                  min={200000}
+                  max={5000000}
+                  step={50000}
+                  value={amount}
+                  onChange={(e) => setAmount(Number(e.target.value))}
+                  className="w-full accent-terracotta"
+                  aria-label="Loan amount"
+                />
+                <div className="flex justify-between text-xs text-ink/50 mt-1">
+                  <span>₹2 L</span><span>₹50 L</span>
+                </div>
+              </div>
+
+              {/* Tenure slider */}
+              <div className="mt-6">
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-medium text-ink">अवधि · Tenure</label>
+                  <span className="font-serif text-lg text-terracotta">{tenure} months · {(tenure / 12).toFixed(1)} years</span>
+                </div>
+                <input
+                  type="range"
+                  min={12}
+                  max={240}
+                  step={6}
+                  value={tenure}
+                  onChange={(e) => setTenure(Number(e.target.value))}
+                  className="w-full accent-terracotta"
+                  aria-label="Tenure in months"
+                />
+                <div className="flex justify-between text-xs text-ink/50 mt-1">
+                  <span>1 year</span><span>20 years</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Best offer card */}
+            <div className="relative">
+              <div className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-green-700 text-white px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider">
+                <CheckCircle className="w-3 h-3" /> Best Offer
+              </div>
+              <div className="rounded-lg border-2 border-terracotta bg-paper p-6">
+                <div className="text-xs text-ink/50 mb-1">Lowest EMI from</div>
+                <div className="font-serif text-xl text-ink mb-1">{cheapest.name}</div>
+                <div className="text-xs text-ink/60 mb-5">{cheapest.rate}% interest · {cheapest.tenure}</div>
+
+                <div className="grid grid-cols-3 gap-3 mb-5 text-center">
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-1">Monthly EMI</div>
+                    <div className="font-serif text-xl text-terracotta">{inrFmt(cheapest.emi)}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-1">Total Interest</div>
+                    <div className="font-serif text-xl text-ink">{inrFmt(cheapest.interestPayable)}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-1">Total Payable</div>
+                    <div className="font-serif text-xl text-ink">{inrFmt(cheapest.totalPayable)}</div>
+                  </div>
+                </div>
+
+                <Link
+                  href={`/loan/apply/${cheapest.slug}?amount=${amount}&tenure=${tenure}`}
+                  className="flex items-center justify-center gap-2 w-full rounded-md bg-terracotta px-5 py-3 text-white font-medium hover:bg-terracotta-dark transition-colors"
+                >
+                  Apply to {cheapest.name} <ArrowRight className="w-4 h-4" />
+                </Link>
+                <p className="mt-3 text-[11px] text-ink/50 text-center">
+                  Free check · No commitment · Approval in 48–72 hours
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Lender list */}
+      <section className="bg-paper">
+        <div className="mx-auto max-w-7xl px-6 py-12">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-6">
+            <div>
+              <h2 className="font-serif text-2xl lg:text-3xl text-ink">All 11 lenders · Compare side by side</h2>
+              <p className="text-sm text-ink/60 mt-1">Rates shown for {inrFmt(amount)} over {tenure} months.</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <Filter className="w-4 h-4 text-ink/50" />
+              <span className="text-xs uppercase tracking-wider text-ink/50 mr-1">Sort by</span>
+              <button
+                onClick={() => setSortBy('rate')}
+                className={`px-3 py-1.5 rounded-md text-sm transition-colors ${sortBy === 'rate' ? 'bg-ink text-paper' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'}`}
+              >
+                Lowest rate
+              </button>
+              <button
+                onClick={() => setSortBy('processing')}
+                className={`px-3 py-1.5 rounded-md text-sm transition-colors ${sortBy === 'processing' ? 'bg-ink text-paper' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'}`}
+              >
+                Lowest fees
+              </button>
+              <button
+                onClick={() => setSortBy('amount')}
+                className={`px-3 py-1.5 rounded-md text-sm transition-colors ${sortBy === 'amount' ? 'bg-ink text-paper' : 'bg-ink/5 text-ink/70 hover:bg-ink/10'}`}
+              >
+                Highest limit
+              </button>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {sortedLenders.map((lender, idx) => (
+              <div
+                key={lender.slug}
+                className={`grid grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 lg:gap-6 items-center rounded-lg border bg-paper p-5 transition-colors ${idx === 0 ? 'border-terracotta/40 bg-terracotta/[0.02]' : 'border-ink/10 hover:border-ink/20'}`}
+              >
+                <div className="col-span-2 lg:col-span-1">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <h3 className="font-serif text-lg text-ink">{lender.name}</h3>
+                    {idx === 0 && (
+                      <span className="inline-flex items-center gap-0.5 rounded-full bg-green-700 text-white px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider">
+                        <CheckCircle className="w-2.5 h-2.5" /> Cheapest
+                      </span>
+                    )}
+                    {lender.bestFor && (
+                      <span className="text-xs text-ink/60">Best for: {lender.bestFor}</span>
+                    )}
+                  </div>
+                  <div className="text-xs text-ink/50 mt-1">{lender.type} · {lender.tenure}</div>
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-0.5 flex items-center gap-1"><Percent className="w-2.5 h-2.5" /> Rate</div>
+                  <div className="font-serif text-lg text-ink">{lender.rate}%</div>
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-0.5 flex items-center gap-1"><IndianRupee className="w-2.5 h-2.5" /> Monthly EMI</div>
+                  <div className="font-serif text-lg text-terracotta">{inrFmt(lender.emi)}</div>
+                </div>
+
+                <div className="flex flex-col">
+                  <div className="text-[10px] uppercase tracking-wider text-ink/50 mb-0.5 flex items-center gap-1"><Clock className="w-2.5 h-2.5" /> Processing</div>
+                  <div className="text-sm text-ink">{lender.processingFee}% fee</div>
+                </div>
+
+                <Link
+                  href={`/loan/apply/${lender.slug}?amount=${amount}&tenure=${tenure}`}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-md bg-ink text-paper px-4 py-2.5 text-sm font-medium hover:bg-terracotta transition-colors col-span-2 lg:col-span-1"
+                >
+                  Apply <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            ))}
+          </div>
+
+          <p className="mt-6 text-xs text-ink/50">
+            Disclaimer: Rates indicative, sourced from each lender's published Gharauni/SVAMITVA loan product pages.
+            Final rate depends on credit score, property valuation, and tenure. Last updated May 2026.
+          </p>
+        </div>
+      </section>
+
+      {/* Trust + FAQ pointer */}
+      <section className="border-t border-ink/10 bg-ink/[0.015]">
+        <div className="mx-auto max-w-5xl px-6 py-12 text-center">
+          <h2 className="font-serif text-2xl text-ink mb-3">अभी जय्यदा सोच रहे हैं?</h2>
+          <p className="text-ink/70 mb-6 max-w-xl mx-auto">Not sure if your Gharauni qualifies? Check your card status first — takes 30 seconds, totally free.</p>
+          <Link href="/check" className="inline-flex items-center gap-2 rounded-md border border-ink/20 bg-paper px-5 py-3 text-ink font-medium hover:bg-ink/5 transition-colors">
+            Check My Gharauni Status →
+          </Link>
+        </div>
+      </section>
+    </Shell>
   );
 }
