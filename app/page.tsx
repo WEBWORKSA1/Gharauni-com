@@ -7,6 +7,25 @@ import { CardMockup } from '@/components/card-mockup';
 import { Testimonials } from '@/components/testimonials';
 import { TrustBadges } from '@/components/trust-badges';
 import { Shell } from '@/components/shell';
+import type { GharauniCard } from '@/lib/types';
+
+// Sample card used for the hero illustration. Plausible but obviously generic
+// — village/owner are common Indian names, card ID is fictional, eligibility
+// numbers reflect typical 200-300 sq yd UP pucca house range.
+const HERO_CARD: GharauniCard = {
+  cardId: '091434-78921-04',
+  owner: 'Ramesh Yadav',
+  village: 'Sikandrabad',
+  district: 'Bulandshahr',
+  state: 'Uttar Pradesh',
+  area: '220 sq yd',
+  areaSqft: 1980,
+  issued: '2024-03-18',
+  status: 'READY',
+  loanEligible: true,
+  eligibilityMin: 800000,
+  eligibilityMax: 1500000,
+};
 
 export default function HomePage() {
   return (
@@ -54,7 +73,7 @@ export default function HomePage() {
 
           {/* Right column: card mockup + lender bar */}
           <div className="relative flex flex-col items-center">
-            <CardMockup />
+            <CardMockup card={HERO_CARD} />
             <div className="mt-8 w-full max-w-md">
               <div className="text-[10px] uppercase tracking-widest text-ink/40 text-center mb-3">Partner Lenders</div>
               <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-ink/60 font-medium">
@@ -108,7 +127,7 @@ export default function HomePage() {
                 <Shield className="w-5 h-5" />
               </div>
               <h3 className="font-serif text-xl text-ink mb-2">खरीदार और विक्रेता</h3>
-              <p className="text-sm text-ink/70 leading-relaxed">Buying or selling rural property. Verify the seller's title is clean, check for disputes, ensure your transaction is on solid legal ground.</p>
+              <p className="text-sm text-ink/70 leading-relaxed">Buying or selling rural property. Verify the seller&apos;s title is clean, check for disputes, ensure your transaction is on solid legal ground.</p>
             </div>
           </div>
         </div>
@@ -133,7 +152,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-6 py-16">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <h2 className="font-serif text-3xl lg:text-4xl text-ink">तीन कदम। बस इतना ही।</h2>
-            <p className="mt-2 text-ink/60">Three steps. That's all it takes.</p>
+            <p className="mt-2 text-ink/60">Three steps. That is all it takes.</p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 lg:gap-10 relative">
@@ -143,7 +162,7 @@ export default function HomePage() {
             <div className="relative text-center">
               <div className="relative inline-flex items-center justify-center w-[68px] h-[68px] rounded-full bg-terracotta text-white font-serif text-2xl mb-4 shadow-sm">1</div>
               <h3 className="font-serif text-xl text-ink mb-2">अपना गाँव खोजें</h3>
-              <p className="text-sm text-ink/70 max-w-[240px] mx-auto">Pick your state → district → tehsil → village from our directory.</p>
+              <p className="text-sm text-ink/70 max-w-[240px] mx-auto">Pick your state, district, tehsil, village from our directory.</p>
             </div>
 
             <div className="relative text-center">
@@ -169,7 +188,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-5xl px-6 py-16 text-center">
           <Award className="w-10 h-10 mx-auto mb-4 opacity-80" />
           <h2 className="font-serif text-3xl lg:text-4xl mb-3">देर मत कीजिए। आपकी घरौनी अभी काम कर सकती है।</h2>
-          <p className="text-white/85 mb-8 max-w-xl mx-auto">Don't wait. Your Gharauni can work for you today. Check your status in 30 seconds — no signup required.</p>
+          <p className="text-white/85 mb-8 max-w-xl mx-auto">Do not wait. Your Gharauni can work for you today. Check your status in 30 seconds, no signup required.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/check" className="inline-flex items-center justify-center gap-2 rounded-md bg-white px-6 py-3.5 text-terracotta font-medium hover:bg-paper transition-colors">
               अभी देखें · Check Now <ArrowRight className="w-4 h-4" />
