@@ -6,14 +6,44 @@
 
 ---
 
+## ⚡ FINISH UP TEHSIL/BLOCK DATA — 1 COMMAND
+
+```bash
+git pull
+node scripts/ingest-up-tehsils.js
+git add lib/data/up/ && git commit -m "Phase 6: full UP LGD ingest" && git push
+```
+
+The script pulls from the **Local Government Directory (LGD)** — the authoritative Ministry of Panchayati Raj source — via the daily-updated `ramseraph.github.io/opendata/lgd/` mirror. It auto-fills all 75 districts with ~350 tehsils and ~826 blocks, handles historical name changes (Allahabad→Prayagraj, Faizabad→Ayodhya, Panchsheel Nagar→Hapur, etc.), and writes the final JSON.
+
+**If the ramseraph file paths have moved:**
+
+```bash
+# Browse https://ramseraph.github.io/opendata/lgd/ to find current paths, then:
+SUBDISTRICTS_CSV=https://ramseraph.github.io/opendata/lgd/path/to/subdistricts.csv \
+BLOCKS_CSV=https://ramseraph.github.io/opendata/lgd/path/to/blocks.csv \
+node scripts/ingest-up-tehsils.js
+```
+
+**Or download from LGD directly** (https://lgdirectory.gov.in/downloadDirectory.do, filter State=Uttar Pradesh, entity=Sub-District + Block, save CSVs locally, serve with `python3 -m http.server`, point env vars at http://localhost:8000/...).
+
+**Dry run first:**
+
+```bash
+DRY_RUN=1 node scripts/ingest-up-tehsils.js
+```
+
+---
+
 ## Phase 6: UP Geography Ingest — IN PROGRESS
 
 **Source of truth ranking:**
-1. District `.nic.in` portals (e.g. `meerut.nic.in/tehsil/`) — PRIMARY, used for 9 districts
-2. CredBrick/India-Locations-API GitHub repo — SECONDARY, used for 6 districts (community-curated from official sources)
-3. Census 2027 (when published) — FUTURE backfill
+1. **LGD (Local Government Directory)** — Ministry of Panchayati Raj. Authoritative for all 75 districts, 350 tehsils, 826 blocks. Use ingest script above.
+2. District `.nic.in` portals (e.g. `meerut.nic.in/tehsil/`) — fallback per-district source, used for 9 districts before script was built
+3. CredBrick/India-Locations-API GitHub repo — used for 6 districts (community-curated from official sources)
+4. Census 2027 (when published) — FUTURE backfill
 
-### Verified districts (15/75)
+### Verified districts at the moment (15/75)
 
 | # | District | Tehsils | Blocks | Source |
 |---|----------|---------|--------|--------|
@@ -33,30 +63,13 @@
 | 14 | Amroha | 4 | 6 | CredBrick |
 | 15 | Auraiya | 3 | 7 | CredBrick |
 
-### Pending districts (60/75) — aggregate counts only, named tehsils TBD
+**Once `node scripts/ingest-up-tehsils.js` runs:** all 75 will be populated from LGD. The script will OVERWRITE the existing tehsils.json with LGD's canonical data (which is more authoritative than the 15 we hand-curated). LGD names may differ slightly in transliteration but represent the same units.
+
+### Pending districts (60/75) — auto-filled by ingest script
 
 Ayodhya, Azamgarh, Baghpat, Bahraich, Ballia, Balrampur, Banda, Barabanki, Bareilly, Basti, Budaun, Bulandshahr, Chandauli, Chitrakoot, Deoria, Etah, Etawah, Farrukhabad, Fatehpur, Firozabad, Gautam Buddha Nagar, Ghaziabad, Ghazipur, Gonda, Hamirpur, Hapur, Hardoi, Hathras, Jalaun, Jaunpur, Jhansi, Kannauj, Kanpur Dehat, Kasganj, Kaushambi, Kushinagar, Lakhimpur Kheri, Lalitpur, Maharajganj, Mahoba, Mainpuri, Mathura, Mau, Mirzapur, Moradabad, Pilibhit, Pratapgarh, Raebareli, Rampur, Sambhal, Sant Kabir Nagar, Sant Ravidas Nagar, Shahjahanpur, Siddharthnagar, Sitapur, Sonbhadra, Sultanpur, Unnao, Varanasi.
 
-For these, the **aggregate `tehsilCount` and `blockCount` fields are populated** (sourced from district NIC portals' summary pages) but the named tehsil/block lists are not yet ingested. UI gracefully handles this via `hasDetailedData: false` flag — user sees "detailed listings being added, you can type your village name directly" message.
-
-### How to finish the remaining 60 districts (TWO PATHS)
-
-**Path A — Run the ingest script locally (15 min, recommended)**
-
-```bash
-git clone https://github.com/WEBWORKSA1/Gharauni-com
-cd Gharauni-com
-node scripts/ingest-up-tehsils.js
-git add lib/data/up/tehsils.json lib/data/up/districts.json
-git commit -m "Phase 6: complete UP tehsils via CredBrick ingest"
-git push
-```
-
-Script is at `scripts/ingest-up-tehsils.js`. Pulls from `CredBrick/India-Locations-API/data/`, reconciles transliterations, generates the final JSON.
-
-**Path B — Hire a data entry contractor**
-
-On Truelancer / Upwork India, post: "Compile UP tehsil + block list from district NIC portals into Google Sheet, 60 districts, ₹3000." 24-48hr turnaround, 100% verified.
+UI gracefully handles these: shows "detailed listings being added, type your village name directly" message on each district page until script runs.
 
 ---
 
@@ -66,18 +79,19 @@ On Truelancer / Upwork India, post: "Compile UP tehsil + block list from distric
 - Phase 1–5: All 8 service tiers (status check, loans, marketplace, title, parser, insurance, learn, dispute)
 - Phase 5B: Legal pages, cookie banner, WhatsApp button, trust badges, Resend email integration
 - Phase 5C: Scraper architecture + worker scaffolding
-- Phase 6 (initial): UP divisions, districts, sample tehsils
+- Phase 6 (initial): UP divisions (18), districts (75), sample tehsils (15 districts)
+- Phase 6 (ingest script): LGD-sourced auto-ingest for remaining 60 districts
 
-### 🔄 Partial / Awaiting User Action
+### 🔄 Awaiting User Action
+- **Run ingest script** — `node scripts/ingest-up-tehsils.js` (finishes Phase 6)
 - **Custom domain DNS** — point gharauni.com nameservers to Vercel
 - **Resend API key** — set `RESEND_API_KEY` env var in Vercel to activate email lead delivery
 - **Affiliate IDs** — sign Bajaj/Tata/ABFL/Kotak affiliate accounts, set their IDs in env vars
 - **Worker VPS** — deploy `worker/` to Hetzner CX22 or DigitalOcean if pursuing live scraping
 - **Phase 5A (Revenue plumbing)** — affiliate click tracking + attribution + analytics
-- **Phase 6 (Tehsil ingest)** — 60 districts pending, see above
 
 ### ⏳ Not Started
-- Phase 7: UP villages (~107K) — chunked structure planned for `/villages/[district-code].json`
+- Phase 7: UP villages (~107K) — LGD has these too, can extend ingest script
 - Phase 8: Other states (MP, MH, KA, HR, RJ adapters defined but no data)
 
 ---
@@ -89,3 +103,20 @@ On Truelancer / Upwork India, post: "Compile UP tehsil + block list from distric
 - **Auto-deploy:** Vercel → gharauni-com.vercel.app on every push to main
 - **Region:** bom1 (Mumbai)
 - **Lead email destination:** webworksa1@gmail.com (when RESEND_API_KEY set)
+
+---
+
+## LGD Resource Reference
+
+Permanent URLs for the Ministry of Panchayati Raj's Local Government Directory:
+
+- Homepage: https://lgdirectory.gov.in/
+- Bulk download (state-filtered): https://lgdirectory.gov.in/downloadDirectory.do
+- Districts viewer: https://lgdirectory.gov.in/globalviewdistrictforcitizen.do
+- Sub-districts viewer: https://lgdirectory.gov.in/globalviewsubdistrictforcitizen.do
+- Blocks viewer: https://lgdirectory.gov.in/globalviewBlockforcitizen.do
+- Daily CSV mirror: https://ramseraph.github.io/opendata/lgd/
+- data.gov.in catalog: https://www.data.gov.in/catalog/local-government-directory-lgd
+
+UP state code in LGD: **9** (numeric) / **09** (string).
+Official UP counts per LGD (May 2026): **75 districts, ~350 tehsils, ~826 development blocks**.
