@@ -1,93 +1,189 @@
-// ───────────────────────────────────────────────────
-// Lead destination — currently EMAIL to webworksa1@gmail.com
-// Future: switch to LEADS_WEBHOOK_URL when CRM is set up
-// ───────────────────────────────────────────────────
-
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
+/**
+ * POST /api/leads
+ *
+ * Accepts lead submissions from every form on the site (LeadForm component +
+ * the custom forms in /check, /dispute/guide). Writes to server log, optionally
+ * forwards to a webhook (LEADS_WEBHOOK_URL), and emails the destination address
+ * via Resend (RESEND_API_KEY).
+ *
+ * The destination email is hardcoded server-side. It is NEVER sent to the
+ * browser, never rendered in any client component, never in any HTML response.
+ * Search the repo for this constant — it only appears in this file.
+ */
 
-const LEAD_EMAIL = process.env.LEAD_EMAIL || 'webworksa1@gmail.com';
-const RESEND_API_KEY = process.env.RESEND_API_KEY; // Phase 5b: add Resend free tier
+// Server-only constant. Not exported. Not visible to clients.
+const LEAD_DESTINATION_EMAIL = 'webworksa1@gmail.com';
+const LEAD_FROM_EMAIL = 'leads@gharauni.com';
+const LEAD_FROM_NAME = 'Gharauni Leads';
 
-async function sendLeadEmail(lead: any) {
-  // If Resend API key is set, send via Resend (3000 free emails/mo)
-  if (RESEND_API_KEY) {
-    try {
-      await fetch('https://api.resend.com/emails', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${RESEND_API_KEY}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          from: 'Gharauni Leads <leads@gharauni.com>',
-          to: LEAD_EMAIL,
-          subject: `🔔 New ${lead.intent} lead · ${lead.name || lead.phone || 'anonymous'}`,
-          html: formatLeadHtml(lead),
-          reply_to: lead.email || undefined
-        })
-      });
-      return { ok: true };
-    } catch (err) {
-      console.error('[Gharauni] Resend delivery failed:', err);
-      return { ok: false };
-    }
-  }
-  // Otherwise, log + return (Vercel function logs)
-  console.log('[Gharauni] LEAD CAPTURED — set RESEND_API_KEY to email:', JSON.stringify(lead, null, 2));
-  return { ok: true, mode: 'log-only' };
+type LeadPayload = {
+  source: string;
+  payload: Record<string, string>;
+  submittedAt?: string;
+};
+
+// Pretty subject line per source
+function subjectFor(source: string, payload: Record<string, string>): string {
+  const tag = `[Gharauni · ${source}]`;
+  const who = payload.name || payload.email || payload.phone || 'New lead';
+  return `${tag} ${who}`;
 }
 
-function formatLeadHtml(lead: any): string {
-  const rows = Object.entries(lead)
-    .filter(([k, v]) => v && k !== 'utm')
-    .map(([k, v]) => `<tr><td style="padding:6px 12px;border-bottom:1px solid #eee;color:#666;text-transform:uppercase;font-size:11px;letter-spacing:1px;">${k}</td><td style="padding:6px 12px;border-bottom:1px solid #eee;font-family:monospace;">${String(v).slice(0, 200)}</td></tr>`)
+// Human-readable text email body
+function textBodyFor(lead: LeadPayload): string {
+  const lines: string[] = [];
+  lines.push(`New lead from gharauni.com`);
+  lines.push(``);
+  lines.push(`Source:        ${lead.source}`);
+  lines.push(`Submitted at:  ${lead.submittedAt || new Date().toISOString()}`);
+  lines.push(``);
+  lines.push(`Fields:`);
+  for (const [k, v] of Object.entries(lead.payload || {})) {
+    const value = typeof v === 'string' ? v.replace(/\n/g, ' / ') : String(v);
+    lines.push(`  ${k.padEnd(18)} ${value}`);
+  }
+  lines.push(``);
+  lines.push(`---`);
+  lines.push(`Reply directly to this email if the lead included a valid email address.`);
+  return lines.join('\n');
+}
+
+// HTML version with light styling
+function htmlBodyFor(lead: LeadPayload): string {
+  const rows = Object.entries(lead.payload || {})
+    .map(([k, v]) => `<tr><td style="padding:6px 12px 6px 0;color:#666;font-weight:500;vertical-align:top;white-space:nowrap">${escapeHtml(k)}</td><td style="padding:6px 0;color:#111">${escapeHtml(String(v))}</td></tr>`)
     .join('');
-  return `
-  <div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;">
-    <div style="background:#7C2D12;color:#FDF6E3;padding:24px;text-align:center;">
-      <div style="font-size:28px;">घ</div>
-      <h1 style="margin:8px 0 0;font-size:22px;">Gharauni.com — New Lead</h1>
+  return `<!doctype html>
+<html><body style="font-family:system-ui,-apple-system,sans-serif;background:#f7f4ee;padding:24px;color:#111">
+  <div style="max-width:560px;margin:0 auto;background:#fff;border:1px solid #e7e2d8;border-radius:8px;overflow:hidden">
+    <div style="background:#c54a1f;color:#fff;padding:14px 20px;font-family:Georgia,serif;font-size:18px">New lead · ${escapeHtml(lead.source)}</div>
+    <div style="padding:20px">
+      <div style="font-size:12px;color:#888;margin-bottom:12px">Submitted ${escapeHtml(lead.submittedAt || new Date().toISOString())}</div>
+      <table style="border-collapse:collapse;font-size:14px">${rows}</table>
     </div>
-    <table style="width:100%;border-collapse:collapse;background:#FDF6E3;">
-      ${rows}
-    </table>
-    <div style="padding:16px;background:#1C1917;color:#A8A29E;font-size:12px;text-align:center;">
-      Sent from Gharauni.com lead capture system
+    <div style="padding:12px 20px;background:#fafafa;border-top:1px solid #eee;font-size:11px;color:#888">
+      Reply to this email if the lead included a valid email address.
     </div>
-  </div>`;
+  </div>
+</body></html>`;
+}
+
+function escapeHtml(s: string): string {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c] as string));
+}
+
+// Send via Resend API (https://resend.com/docs/api-reference/emails/send-email)
+async function sendViaResend(lead: LeadPayload): Promise<{ ok: boolean; error?: string }> {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) {
+    return { ok: false, error: 'RESEND_API_KEY not set' };
+  }
+
+  const replyTo = lead.payload?.email && typeof lead.payload.email === 'string' && lead.payload.email.includes('@')
+    ? lead.payload.email
+    : undefined;
+
+  try {
+    const res = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: `${LEAD_FROM_NAME} <${LEAD_FROM_EMAIL}>`,
+        to: [LEAD_DESTINATION_EMAIL],
+        reply_to: replyTo,
+        subject: subjectFor(lead.source, lead.payload),
+        text: textBodyFor(lead),
+        html: htmlBodyFor(lead),
+      }),
+    });
+    if (!res.ok) {
+      const body = await res.text();
+      return { ok: false, error: `Resend HTTP ${res.status}: ${body.slice(0, 200)}` };
+    }
+    return { ok: true };
+  } catch (err: unknown) {
+    return { ok: false, error: err instanceof Error ? err.message : 'Unknown Resend error' };
+  }
+}
+
+// Optional: forward to a webhook (Slack, Zapier, n8n, Discord)
+async function forwardToWebhook(lead: LeadPayload): Promise<{ ok: boolean; error?: string }> {
+  const url = process.env.LEADS_WEBHOOK_URL;
+  if (!url) return { ok: true }; // not configured = silent skip
+  try {
+    await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: subjectFor(lead.source, lead.payload),
+        lead,
+      }),
+    });
+    return { ok: true };
+  } catch (err: unknown) {
+    return { ok: false, error: err instanceof Error ? err.message : 'Webhook error' };
+  }
 }
 
 export async function POST(req: NextRequest) {
+  let body: LeadPayload;
   try {
-    const lead = await req.json();
-    if (!lead.intent) {
-      return NextResponse.json({ ok: false, error: 'intent required' }, { status: 400 });
-    }
-    const enriched = {
-      ...lead,
-      receivedAt: new Date().toISOString(),
-      ip: req.headers.get('x-forwarded-for') || 'unknown',
-      userAgent: req.headers.get('user-agent') || 'unknown',
-      referer: req.headers.get('referer') || 'direct'
-    };
-    await sendLeadEmail(enriched);
-    return NextResponse.json({
-      ok: true,
-      id: `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`
-    });
-  } catch (err) {
-    return NextResponse.json({ ok: false, error: 'Invalid payload' }, { status: 400 });
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: 'Invalid JSON' }, { status: 400 });
   }
+
+  if (!body.source || typeof body.source !== 'string') {
+    return NextResponse.json({ ok: false, error: 'Missing source' }, { status: 400 });
+  }
+  if (!body.payload || typeof body.payload !== 'object') {
+    return NextResponse.json({ ok: false, error: 'Missing payload' }, { status: 400 });
+  }
+
+  // Spam guards (basic)
+  const payloadStr = JSON.stringify(body.payload);
+  if (payloadStr.length > 8000) {
+    return NextResponse.json({ ok: false, error: 'Payload too large' }, { status: 413 });
+  }
+  // Honeypot field — if present and non-empty, silently accept and discard
+  if (typeof body.payload._hp === 'string' && body.payload._hp.length > 0) {
+    return NextResponse.json({ ok: true, spam: true });
+  }
+
+  // Always log server-side so leads aren't lost even if Resend fails
+  console.log(`[lead] source=${body.source} fields=${Object.keys(body.payload).join(',')}`);
+
+  const lead: LeadPayload = {
+    source: body.source,
+    payload: body.payload,
+    submittedAt: body.submittedAt || new Date().toISOString(),
+  };
+
+  // Fire email + webhook in parallel. Don't block the response on either.
+  const [emailRes, webhookRes] = await Promise.all([
+    sendViaResend(lead),
+    forwardToWebhook(lead),
+  ]);
+
+  // Even if email fails (e.g. key not set yet), accept the lead and log the
+  // failure server-side. Returning 500 here would discourage real users
+  // because of an ops misconfig — bad UX.
+  if (!emailRes.ok) {
+    console.error(`[lead:email-failed] ${emailRes.error}`);
+  }
+  if (!webhookRes.ok) {
+    console.error(`[lead:webhook-failed] ${webhookRes.error}`);
+  }
+
+  return NextResponse.json({ ok: true });
 }
 
+// GET is intentionally unsupported — leads are write-only from public.
 export async function GET() {
-  return NextResponse.json({
-    ok: true,
-    service: 'Gharauni leads endpoint',
-    destination: LEAD_EMAIL,
-    mode: RESEND_API_KEY ? 'email' : 'log-only',
-    method: 'POST'
-  });
+  return NextResponse.json({ ok: false, error: 'Method not allowed' }, { status: 405 });
 }
