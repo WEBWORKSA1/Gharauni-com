@@ -5,10 +5,6 @@ import { Shell } from '@/components/shell';
 import { LeadForm, LeadField } from '@/components/lead-form';
 import { LENDERS } from '@/lib/mock-data';
 
-// /loan/apply/[lender] — individual lender application form.
-// Pre-fills amount and tenure from query params (when arriving from /loan).
-// EMI is calculated server-side and shown in the right rail.
-
 type Params = { lender: string };
 type Search = { amount?: string; tenure?: string };
 
@@ -18,7 +14,7 @@ function calcEMI(rate: number, principal: number, months: number): number {
   return Math.round((principal * r * Math.pow(1 + r, months)) / (Math.pow(1 + r, months) - 1));
 }
 
-const inrFmt = (n: number) => `₹${n.toLocaleString('en-IN')}`;
+const inrFmt = (n: number) => `\u20b9${n.toLocaleString('en-IN')}`;
 
 export function generateStaticParams() {
   return LENDERS.map((l) => ({ lender: l.slug }));
@@ -57,7 +53,7 @@ export default function LoanApplyPage({
     { name: 'purpose', label: 'Loan purpose', labelHi: 'उद्देश्य', type: 'select', required: true, options: [
       { value: 'home-improvement', label: 'Home construction / improvement' },
       { value: 'business', label: 'Business expansion / working capital' },
-      { value: 'education', label: 'Children\'s education' },
+      { value: 'education', label: 'Education for children' },
       { value: 'medical', label: 'Medical expenses' },
       { value: 'wedding', label: 'Wedding / family event' },
       { value: 'debt-consolidation', label: 'Debt consolidation' },
@@ -65,6 +61,8 @@ export default function LoanApplyPage({
     ] },
     { name: 'notes', label: 'Anything else?', type: 'textarea', placeholder: 'Optional. Co-applicant, existing loans, etc.' },
   ];
+
+  const lenderUnderwriting = lender.name + "'s underwriting";
 
   return (
     <Shell>
@@ -90,7 +88,6 @@ export default function LoanApplyPage({
 
       <section className="bg-paper">
         <div className="mx-auto max-w-7xl px-6 py-10 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
-          {/* Form */}
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Your application</h2>
             <p className="text-sm text-ink/60 mb-7">We forward your details to {lender.name} and follow up within 24 hours.</p>
@@ -113,7 +110,6 @@ export default function LoanApplyPage({
             />
           </div>
 
-          {/* Quote rail */}
           <div className="space-y-6">
             <div className="rounded-lg border-2 border-terracotta bg-paper p-6">
               <div className="text-[11px] uppercase tracking-widest text-terracotta/80 font-medium mb-3">Your quote</div>
@@ -132,7 +128,7 @@ export default function LoanApplyPage({
                 <div className="flex justify-between text-xs"><span className="text-ink/55">Total payable</span><span className="text-ink/70">{inrFmt(totalPayable)}</span></div>
               </div>
               <p className="mt-4 pt-4 border-t border-terracotta/15 text-[11px] text-ink/50 leading-relaxed">
-                Indicative. Final rate depends on credit score, property valuation, and {lender.name}\'s underwriting. Rate range: {lender.rate}–{lender.rateMax}%.
+                Indicative. Final rate depends on credit score, property valuation, and {lenderUnderwriting}. Rate range: {lender.rate}–{lender.rateMax}%.
               </p>
             </div>
 
@@ -141,8 +137,8 @@ export default function LoanApplyPage({
               <ol className="space-y-2 text-sm text-ink/75">
                 <li><strong className="text-ink">Today:</strong> Submit application here</li>
                 <li><strong className="text-ink">Within 24 hr:</strong> {lender.name} representative calls you</li>
-                <li><strong className="text-ink">Day 2-3:</strong> Document verification + property valuation</li>
-                <li><strong className="text-ink">Day 4-5:</strong> Sanction letter + disbursal</li>
+                <li><strong className="text-ink">Day 2-3:</strong> Document verification and property valuation</li>
+                <li><strong className="text-ink">Day 4-5:</strong> Sanction letter and disbursal</li>
               </ol>
             </div>
 
@@ -153,7 +149,6 @@ export default function LoanApplyPage({
         </div>
       </section>
 
-      {/* Trust strip */}
       <section className="border-t border-ink/10 bg-ink/[0.015]">
         <div className="mx-auto max-w-7xl px-6 py-8">
           <div className="grid sm:grid-cols-3 gap-4 text-sm text-ink/65">

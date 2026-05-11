@@ -4,18 +4,8 @@ import { CheckCircle2, AlertCircle, Clock, MapPin, ArrowRight, Phone, Download }
 import { Shell } from '@/components/shell';
 import { CardMockup } from '@/components/card-mockup';
 
-// /check/result — result page after submitting the /check form.
-// We don't have a real backend SVAMITVA query yet, so this is a *deterministic mock*
-// based on query params. The UI honestly says "this is an indicative result" and
-// captures the lead for follow-up.
-//
-// Reading the query params via the searchParams prop keeps this a server component
-// (good for SEO + fast first-paint). When you wire up a real backend later, swap the
-// mock result block for a fetch call.
-
 type Search = { state?: string; district?: string; tehsil?: string; village?: string };
 
-// Deterministic pseudo-randomness from the input string so the "result" is stable.
 function hash(str: string): number {
   let h = 0;
   for (let i = 0; i < str.length; i++) h = ((h << 5) - h) + str.charCodeAt(i);
@@ -42,7 +32,7 @@ function ResultBody({ searchParams }: { searchParams: Search }) {
         <h2 className="font-serif text-xl text-ink mb-2">Missing information</h2>
         <p className="text-ink/70 mb-4">Please go back and fill in at least state, district, and village.</p>
         <Link href="/check" className="inline-flex items-center gap-2 rounded-md bg-terracotta px-5 py-2.5 text-white font-medium hover:bg-terracotta-dark transition-colors">
-          ← Back to check form
+          Back to check form
         </Link>
       </div>
     );
@@ -50,11 +40,11 @@ function ResultBody({ searchParams }: { searchParams: Search }) {
 
   const r = mockResult(searchParams);
   const statusConfig = {
-    issued: { color: 'green', label: 'Likely available', labelHi: 'जारी हो चुका', icon: CheckCircle2,
+    issued: { color: 'green' as const, label: 'Likely available', labelHi: 'जारी हो चुका', icon: CheckCircle2,
       summary: `Of ~${r.villageCardsTotal} estimated village households, ~${r.villageCardsIssued} cards have been issued in this village. Your Gharauni is likely ready.` },
-    partial: { color: 'amber', label: 'Partially available', labelHi: 'कुछ जारी हुई', icon: Clock,
+    partial: { color: 'amber' as const, label: 'Partially available', labelHi: 'कुछ जारी हुई', icon: Clock,
       summary: `About ${r.villageCardsIssued} of ~${r.villageCardsTotal} households have been issued cards in this village. Yours may or may not be ready yet.` },
-    pending: { color: 'red', label: 'Not yet available', labelHi: 'जारी नहीं हुई', icon: AlertCircle,
+    pending: { color: 'red' as const, label: 'Not yet available', labelHi: 'जारी नहीं हुई', icon: AlertCircle,
       summary: `Drone survey complete but cards not yet issued. Expected issuance: 60-180 days based on rollout pace.` },
   }[r.status];
 
@@ -79,7 +69,6 @@ function ResultBody({ searchParams }: { searchParams: Search }) {
         <MapPin className="w-3.5 h-3.5" /> {[searchParams.tehsil, searchParams.district, searchParams.state?.replace(/-/g, ' ')].filter(Boolean).join(', ')}
       </div>
 
-      {/* Status banner */}
       <div className={`rounded-lg border-2 p-6 mb-8 ${colorClass}`}>
         <div className="flex items-start gap-4">
           <statusConfig.icon className={`w-8 h-8 mt-0.5 ${iconColor}`} />
@@ -91,12 +80,10 @@ function ResultBody({ searchParams }: { searchParams: Search }) {
         </div>
       </div>
 
-      {/* Honest disclaimer */}
       <div className="rounded-md bg-ink/[0.03] border border-ink/10 p-4 mb-8 text-xs text-ink/65 leading-relaxed">
         <strong className="text-ink/80">This is an indicative result based on village-level SVAMITVA rollout data.</strong> For your specific household card, the most accurate next step is to visit your nearest Common Service Centre (CSC) or check the official SVAMITVA portal at <a href="https://svamitva.nic.in" target="_blank" rel="noreferrer noopener" className="underline">svamitva.nic.in</a> using your village code.
       </div>
 
-      {/* What next — different CTAs based on status */}
       <h3 className="font-serif text-xl text-ink mb-4">अगली कार्रवाई · What you can do next</h3>
 
       {r.status === 'issued' && (
@@ -145,13 +132,12 @@ function ResultBody({ searchParams }: { searchParams: Search }) {
         </div>
       )}
 
-      {/* Lead capture CTA — always shown */}
       <div className="mt-10 rounded-lg bg-terracotta text-white p-6">
         <div className="flex items-start gap-4">
           <Phone className="w-6 h-6 mt-0.5 opacity-80 flex-shrink-0" />
           <div className="flex-1">
             <h3 className="font-serif text-xl mb-1">ज़्यादा जानकारी चाहिए?</h3>
-            <p className="text-white/85 text-sm mb-4">Get a free WhatsApp follow-up from our team — we\'ll walk through your options based on your situation.</p>
+            <p className="text-white/85 text-sm mb-4">Get a free WhatsApp follow-up from our team — we will walk through your options based on your situation.</p>
             <Link href="/contact" className="inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-terracotta text-sm font-medium hover:bg-paper transition-colors">
               Free WhatsApp follow-up →
             </Link>

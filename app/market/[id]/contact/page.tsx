@@ -4,13 +4,8 @@ import { ArrowLeft, MapPin, Maximize2, Shield, Phone, Calendar, Eye } from 'luci
 import { Shell } from '@/components/shell';
 import { LeadForm, LeadField } from '@/components/lead-form';
 
-// /market/[id]/contact — contact-the-seller form for a marketplace listing.
-// We don't expose the seller's phone directly (privacy + lead-gen value); instead
-// we collect the buyer's contact and forward.
-
 type Params = { id: string };
 
-// Same mock data as the listings page. In production this would be a DB lookup.
 const MOCK_LISTINGS: Array<{
   id: string;
   title: string;
@@ -43,12 +38,14 @@ export default function ListingContactPage({ params }: { params: Params }) {
   const listing = MOCK_LISTINGS.find((l) => l.id === params.id);
   if (!listing) return notFound();
 
+  const askingPriceLabel = 'Matches the asking price (' + listing.priceLabel + ')';
+
   const fields: LeadField[] = [
     { name: 'name', label: 'Your name', labelHi: 'अपना नाम', required: true, gridCols: 1 },
     { name: 'phone', label: 'Mobile (WhatsApp)', labelHi: 'मोबाइल', type: 'tel', required: true, gridCols: 1, placeholder: '+91 XXXXX XXXXX' },
     { name: 'email', label: 'Email', type: 'email', required: true, gridCols: 1 },
     { name: 'budget', label: 'Your budget range', type: 'select', required: true, gridCols: 1, options: [
-      { value: 'match', label: `Matches the asking price (${listing.priceLabel})` },
+      { value: 'match', label: askingPriceLabel },
       { value: 'lower', label: 'Lower than asking' },
       { value: 'higher', label: 'Higher than asking, open to negotiate' },
       { value: 'exploring', label: 'Just exploring' },
@@ -61,7 +58,7 @@ export default function ListingContactPage({ params }: { params: Params }) {
     ] },
     { name: 'needsLoan', label: 'Will you need a loan?', type: 'select', required: true, gridCols: 1, options: [
       { value: 'yes', label: 'Yes, please connect me to lenders' },
-      { value: 'maybe', label: 'Maybe — send loan info too' },
+      { value: 'maybe', label: 'Maybe - send loan info too' },
       { value: 'no', label: 'No, paying in cash' },
     ] },
     { name: 'visitInterest', label: 'Want to visit the property?', type: 'select', required: false, gridCols: 1, options: [
@@ -69,11 +66,9 @@ export default function ListingContactPage({ params }: { params: Params }) {
       { value: 'video', label: 'Video tour first' },
       { value: 'later', label: 'Decide after talking' },
     ] },
-    { name: 'questions', label: 'Questions for the seller?', type: 'textarea', placeholder: 'e.g., "How old is the construction? Is electricity connection included? Any pending disputes?"' },
+    { name: 'questions', label: 'Questions for the seller?', type: 'textarea', placeholder: 'e.g., How old is the construction? Is electricity connection included? Any pending disputes?' },
   ];
 
-  // The actual listing context gets injected into the lead payload server-side via
-  // a hidden field, so it lands in the email along with the buyer's info.
   return (
     <Shell>
       <section className="border-b border-ink/10 bg-paper">
@@ -89,22 +84,16 @@ export default function ListingContactPage({ params }: { params: Params }) {
 
       <section className="bg-paper">
         <div className="mx-auto max-w-7xl px-6 py-10 grid lg:grid-cols-[1.4fr_1fr] gap-10 lg:gap-14">
-          {/* Form */}
           <div className="rounded-lg border border-ink/10 bg-paper p-7 lg:p-9">
             <h2 className="font-serif text-2xl text-ink mb-1">Tell us about you</h2>
             <p className="text-sm text-ink/60 mb-7">We forward verified buyer enquiries to the seller. They reach out to you, not the other way around.</p>
             <LeadForm
               source={`market-contact:${listing.id}`}
-              fields={[
-                // Hidden fields capture which listing this is + extra context.
-                { name: 'listingId', label: 'Listing ID', required: true, gridCols: 1, helpText: undefined, type: 'text' },
-                { name: 'listingTitle', label: 'Listing', required: true, gridCols: 1, type: 'text' },
-                ...fields,
-              ].filter((f) => !['listingId', 'listingTitle'].includes(f.name)) /* hide internal fields from UI; passed by initial values below if we add a defaultValues prop */}
+              fields={fields}
               submitLabel="Send enquiry to seller"
               successHeadline="Enquiry sent"
               successHeadlineHi="पूछताछ भेजी गई"
-              successBody={`We've forwarded your enquiry about "${listing.title}" in ${listing.village}. The seller will reach out within 48 hours. If you don't hear back, email us at hello@gharauni.com.`}
+              successBody={'We have forwarded your enquiry about "' + listing.title + '" in ' + listing.village + '. The seller will reach out within 48 hours. If you do not hear back, email us at hello@gharauni.com.'}
               preSubmit={
                 <div className="rounded-md bg-ink/[0.03] border border-ink/10 p-4 text-sm text-ink/75 flex items-start gap-3">
                   <Shield className="w-4 h-4 mt-0.5 text-terracotta flex-shrink-0" />
@@ -117,7 +106,6 @@ export default function ListingContactPage({ params }: { params: Params }) {
             />
           </div>
 
-          {/* Listing card recap */}
           <div className="space-y-6">
             <article className="rounded-lg border border-ink/10 bg-paper overflow-hidden">
               <div className="relative aspect-[4/3] bg-gradient-to-br from-terracotta/15 to-terracotta/5 flex items-center justify-center">
@@ -146,7 +134,7 @@ export default function ListingContactPage({ params }: { params: Params }) {
 
             <div className="rounded-md bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900">
               <strong className="font-medium">Want extra protection?</strong>
-              <p className="mt-1">Before transacting, run a <Link href="/title" className="underline font-medium">₹499 title check</Link> on the seller\'s Gharauni. Catches duplicate listings, encumbrances, or pending disputes.</p>
+              <p className="mt-1">Before transacting, run a <Link href="/title" className="underline font-medium">₹499 title check</Link> on the seller&apos;s Gharauni. Catches duplicate listings, encumbrances, or pending disputes.</p>
             </div>
           </div>
         </div>
