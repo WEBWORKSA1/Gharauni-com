@@ -1,133 +1,110 @@
-'use client';
+import { Scale, AlertTriangle, FileWarning, MessageSquare, Phone, BookOpen } from 'lucide-react';
+import { TierPage, TierConfig } from '@/components/tier-page';
 
-import { useState } from 'react';
-import { AlertTriangle, CheckCircle2, Loader2, Scale, FileText } from 'lucide-react';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
-import { submitLead } from '@/lib/api';
-import { validatePhone, validateGharauniId } from '@/lib/utils';
+const config: TierConfig = {
+  badge: 'विवाद · Disputes',
+  badgeColor: 'amber',
+  headlineHi: 'विवाद को सही रास्ते पर लाएं',
+  headline: 'Resolve land disputes calmly.',
+  subheadline: 'Step-by-step guidance + verified lawyers for Gharauni-related conflicts.',
+  description:
+    'Two relatives claim the same plot. The boundary on the card differs from the actual fence. A long-lost uncle suddenly appears with old papers. Gharauni disputes are common — and rarely require court if handled right. We give you the step-by-step guide for free, and connect you to verified property lawyers when you need one. ₹999 first consultation.',
+  primaryCTA: { label: 'Start dispute guide →', href: '/dispute/guide' },
+  secondaryCTA: { label: 'Talk to a verified lawyer', href: '/dispute/lawyer' },
+
+  problemTitle: 'Disputes get expensive fast',
+  problemTitleHi: 'विवाद महंगा हो जाता है',
+  problemBody:
+    'Most rural land disputes escalate not because they\'re inherently hard, but because villagers don\'t know the right sequence: who to talk to first, what documents to compile, when to involve the panchayat vs the Tehsildar vs the court. By the time a lawyer is hired, both sides have dug in, and ₹50k+ has been spent on what could have been resolved in a panchayat meeting.',
+  solutionTitle: 'Free guide + paid escalation',
+  solutionTitleHi: 'मुफ्त गाइड + वकील',
+  solutionBody:
+    'Our step-by-step Hindi guide walks you through the 4-stage resolution path: (1) gather your documents, (2) talk to the other party with a neutral elder, (3) panchayat mediation, (4) Tehsildar or court if needed. Free. When you genuinely need professional help, we connect you to property lawyers we\'ve vetted, with transparent fixed pricing starting at ₹999.',
+  outcome:
+    '80% of disputes resolved before stage 4. Average cost to the cardholder: under ₹5,000.',
+
+  featuresHeading: 'What\'s in our dispute resource',
+  featuresHeadingHi: 'किस तरह मदद करते हैं',
+  features: [
+    {
+      icon: BookOpen,
+      title: 'Hindi step-by-step guide',
+      titleHi: 'हिंदी में गाइड',
+      body: '14-page guide covering inheritance, boundary, double-claim, and forged-document disputes. Free download. No login required.',
+    },
+    {
+      icon: MessageSquare,
+      title: 'WhatsApp Q&A',
+      titleHi: 'व्हाट्सएप पर सवाल',
+      body: 'Send your situation to our WhatsApp. Get a clear next step within 4 hours. Free for the first question.',
+    },
+    {
+      icon: Scale,
+      title: 'Verified lawyer network',
+      titleHi: 'जाँचे हुए वकील',
+      body: 'Property lawyers we\'ve vetted across UP, MH, MP, HR. Fixed pricing (no per-hour billing). ₹999 first consult, transparent fees thereafter.',
+    },
+  ],
+
+  stepsHeading: 'The 4-stage resolution path',
+  stepsHeadingHi: '4-चरण समाधान',
+  steps: [
+    {
+      title: 'Document and de-escalate',
+      titleHi: 'जानकारी इकट्ठा करें',
+      body: 'Compile your Gharauni, supporting papers, and the other party\'s claim. Talk first — most disputes are misunderstandings.',
+    },
+    {
+      title: 'Panchayat mediation',
+      titleHi: 'पंचायत में बातचीत',
+      body: 'Bring it to the village panchayat with a neutral elder. Most boundary and inheritance issues end here.',
+    },
+    {
+      title: 'Tehsildar or court',
+      titleHi: 'तहसीलदार या न्यायालय',
+      body: 'Only if mediation fails. By this point you should have a lawyer. We\'ll connect you with one if needed.',
+    },
+  ],
+
+  faq: [
+    {
+      q: 'My brother and I both claim ownership of our father\'s house. What do I do?',
+      qHi: 'क्या भाई और मैं दोनों दावा कर रहे हैं?',
+      a: 'Inheritance disputes are the most common type. Step 1: get a copy of your father\'s will (if any) and the Gharauni issued for the property. Step 2: under Hindu Succession Act (or other applicable personal law), surviving children typically have equal share. Step 3: panchayat mediation with all siblings present often settles this within a month. Our guide walks through the exact paperwork.',
+    },
+    {
+      q: 'The boundary on my Gharauni differs from my actual fence. What now?',
+      qHi: 'सीमा गलत है, क्या करें?',
+      a: 'Boundary discrepancies happen because drone surveys are accurate to about 1-2 meters. If the difference is small and your neighbor agrees, you can both file a joint correction request with the Tehsildar (no court needed). For larger discrepancies, our guide covers the formal mutation process.',
+    },
+    {
+      q: 'Someone else claims my plot has been theirs for years. Help?',
+      qHi: 'कोई और दावा कर रहा है?',
+      a: 'Adverse-possession claims are tricky but rarely successful against SVAMITVA-titled property. The Gharauni card is strong primary evidence. Talk to a lawyer immediately if the other party has filed any formal claim. Our ₹999 first consult clarifies whether you need to do anything urgent.',
+    },
+    {
+      q: 'Can the panchayat overrule my Gharauni?',
+      qHi: 'क्या पंचायत कार्ड को बदल सकती है?',
+      a: 'No. The panchayat can mediate disputes but cannot legally alter or cancel a Gharauni card. Only the Tehsildar (through proper mutation procedure) or a competent court can do that.',
+    },
+    {
+      q: 'How much do lawyers cost?',
+      qHi: 'वकील का खर्च?',
+      a: 'Our network: ₹999 first 30-minute consultation. After that, fixed pricing per service — e.g., drafting a partition deed ₹5,000-8,000, representing in Tehsildar case ₹15,000-25,000. We disclose all costs upfront. No surprise per-hour bills.',
+    },
+    {
+      q: 'What if I can\'t afford a lawyer?',
+      qHi: 'अगर वकील का पैसा नहीं है?',
+      a: 'Free legal aid through District Legal Services Authority (DLSA). Our guide includes the application process. Many disputes also qualify for Lok Adalat (people\'s court) where there is no lawyer fee.',
+    },
+  ],
+
+  finalHeadline: 'A dispute resolved is property restored.',
+  finalHeadlineHi: 'विवाद सुलझाएं, संपत्ति बचाएं।',
+  finalBody: 'Most disputes don\'t need a courtroom. Start with our free Hindi guide — you may not need anything else.',
+  finalCTA: { label: 'Download the dispute guide →', href: '/dispute/guide' },
+};
 
 export default function DisputePage() {
-  const [form, setForm] = useState({
-    name: '', phone: '', cardId: '', disputeType: '', description: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    if (!validatePhone(form.phone)) { setError('सही मोबाइल नंबर डालें'); return; }
-    if (!validateGharauniId(form.cardId)) { setError('घरौनी ID सही डालें (274612-04567-08)'); return; }
-    setLoading(true);
-    await submitLead({
-      intent: 'dispute',
-      name: form.name,
-      phone: form.phone,
-      cardId: form.cardId,
-      message: `Type: ${form.disputeType} | ${form.description}`,
-      source: 'dispute',
-      createdAt: new Date().toISOString()
-    });
-    setLoading(false);
-    setSubmitted(true);
-  };
-
-  return (
-    <>
-      <Nav />
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mono text-xs text-terracotta-600 tracking-widest mb-3">SERVICE · DISPUTE TRACKING</div>
-          <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-start mb-4">
-            <h1 className="display text-4xl sm:text-5xl m-0 leading-tight">Gharauni Dispute Resolution Tracker</h1>
-            <AlertTriangle size={56} className="text-terracotta-600 hidden lg:block" />
-          </div>
-          <p className="text-lg text-ink-700 mb-12 leading-relaxed max-w-3xl">
-            विवादित कार्ड ट्रैक करें, ऑब्जेक्शन दायर करें, कानूनी मदद पाएँ। 6 महीने के अंदर दायर किए गए अधिकांश विवाद बिना अदालत जाए सुलझ जाते हैं।
-          </p>
-
-          <div className="grid lg:grid-cols-[1fr_1.3fr] gap-10">
-            {/* STATS + INFO */}
-            <div>
-              <div className="bg-ivory-50 p-6 border-[1.5px] border-ivory-200 mb-5">
-                <Scale size={32} className="text-terracotta-600 mb-3" />
-                <div className="display text-2xl mb-4">By the numbers</div>
-                <div className="space-y-3">
-                  <KV k="Active dispute cases" v="4,200+" />
-                  <KV k="Avg resolution time" v="43 days" />
-                  <KV k="Resolved without court" v="78%" />
-                  <KV k="Empaneled lawyers" v="180+" />
-                </div>
-              </div>
-              <div className="bg-ink-900 text-ivory-50 p-6">
-                <FileText size={28} className="text-amber-300 mb-3" />
-                <div className="display text-xl mb-2">How it works</div>
-                <ol className="text-sm space-y-2 text-ink-200">
-                  <li>1. File objection with documents</li>
-                  <li>2. Auto-match with local Tehsildar / Patwari</li>
-                  <li>3. Track hearing status in app</li>
-                  <li>4. Optional: empanel a lawyer</li>
-                  <li>5. Resolution + updated card</li>
-                </ol>
-              </div>
-              <div className="mt-5 text-sm text-ink-500">
-                First 30 days free · ₹499/mo thereafter
-              </div>
-            </div>
-
-            {/* DISPUTE FORM */}
-            {!submitted ? (
-              <form onSubmit={onSubmit} className="bg-ivory-50 p-7 border-[1.5px] border-ivory-200">
-                <h2 className="display text-2xl mb-1">विवाद दर्ज करें</h2>
-                <p className="text-sm text-ink-700 mb-5">पहले 30 दिन मुफ़्त।</p>
-                <div className="space-y-4">
-                  <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="आपका नाम" className="input-base" />
-                  <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="मोबाइल" className="input-base" />
-                  <input required value={form.cardId} onChange={e => setForm({ ...form, cardId: e.target.value })} placeholder="घरौनी ID (274612-04567-08)" className="input-base mono" />
-                  <select required value={form.disputeType} onChange={e => setForm({ ...form, disputeType: e.target.value })} className="input-base">
-                    <option value="">विवाद का प्रकार</option>
-                    <option value="Overlapping plots">Overlapping plot boundaries</option>
-                    <option value="Wrong owner name">Wrong owner name on card</option>
-                    <option value="Family dispute">Family ownership dispute</option>
-                    <option value="Encumbrance">Hidden mortgage / encumbrance</option>
-                    <option value="Area mismatch">Area / measurement mismatch</option>
-                    <option value="Other">Other</option>
-                  </select>
-                  <textarea required value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="संक्षिप्त विवरण दें..." className="input-base resize-y" rows={4} />
-                  {error && (
-                    <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 text-red-800 text-sm">
-                      <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
-                      <span>{error}</span>
-                    </div>
-                  )}
-                  <button type="submit" disabled={loading} className="btn-primary w-full inline-flex items-center justify-center gap-2 disabled:opacity-60">
-                    {loading ? <><Loader2 size={16} className="animate-spin" /> दर्ज हो रहा है...</> : <>विवाद दर्ज करें</>}
-                  </button>
-                </div>
-              </form>
-            ) : (
-              <div className="bg-ivory-50 p-10 border-[1.5px] border-ivory-200 text-center">
-                <CheckCircle2 size={48} className="text-accent-green mx-auto mb-3" />
-                <div className="display text-2xl mb-2">विवाद दर्ज हो गया</div>
-                <p className="text-ink-700 mb-3">Case ID: <span className="mono text-terracotta-600">DSP-{Date.now()}</span></p>
-                <p className="text-sm text-ink-500">हमारी टीम 48 घंटों में संपर्क करेगी और स्थानीय तहसीलदार के साथ मैच करेगी।</p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-      <Footer />
-    </>
-  );
-}
-
-function KV({ k, v }: { k: string; v: string }) {
-  return (
-    <div className="flex justify-between items-baseline border-b border-ivory-200 pb-2 last:border-0 last:pb-0">
-      <span className="text-sm text-ink-700">{k}</span>
-      <span className="display text-xl text-terracotta-600">{v}</span>
-    </div>
-  );
+  return <TierPage config={config} />;
 }

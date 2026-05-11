@@ -1,125 +1,105 @@
-'use client';
+import { Umbrella, Flame, CloudRain, ShieldCheck, IndianRupee, Clock } from 'lucide-react';
+import { TierPage, TierConfig } from '@/components/tier-page';
 
-import { useState } from 'react';
-import { Umbrella, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
-import { Nav } from '@/components/nav';
-import { Footer } from '@/components/footer';
-import { submitLead } from '@/lib/api';
-import { validatePhone } from '@/lib/utils';
+const config: TierConfig = {
+  badge: 'बीमा · Property Insurance',
+  badgeColor: 'amber',
+  headlineHi: 'अपने घर का बीमा कराएँ',
+  headline: 'Insure your village home.',
+  subheadline: 'For the 30 crore homes that never had a title to insure against — until now.',
+  description:
+    'Pre-SVAMITVA, rural homes were essentially uninsurable. Insurers want proof of ownership and a clear address; village houses had neither. With your Gharauni card, you can now get home insurance covering fire, flood, storm damage, and theft. Premiums start from ₹1,200/year for a typical 200-sq-yd house. We compare 6 insurers and find the cheapest cover for your district.',
+  primaryCTA: { label: 'Get insurance quotes →', href: '/insurance/quote' },
+  secondaryCTA: { label: 'What\'s covered', href: '#features' },
 
-const PLANS = [
-  { name: 'Basic', cover: '₹5L', premium: '₹120/mo', desc: 'Fire + theft only', color: '#65A30D' },
-  { name: 'Standard', cover: '₹15L', premium: '₹295/mo', desc: 'Fire + theft + flood + structural', color: '#7C2D12', badge: 'Most chosen' },
-  { name: 'Premium', cover: '₹50L', premium: '₹899/mo', desc: 'All risks + crop + livestock', color: '#1E3A8A' }
-];
+  problemTitle: 'Rural homes were uninsurable',
+  problemTitleHi: 'गाँव के घर बीमे से बाहर',
+  problemBody:
+    'Insurance companies require proof of ownership and a defined address. Pre-SVAMITVA, most village homes had neither — the land was technically "Abadi" (un-titled residential commons) and addresses were oral. Result: when a flood, fire, or storm hit, families had no claim against any insurer. Recovery happened through informal lending or, increasingly, never at all.',
+  solutionTitle: 'Gharauni unlocks home insurance',
+  solutionTitleHi: 'घरौनी से बीमा हो सकता है',
+  solutionBody:
+    'The 13-digit Gharauni ID gives insurers everything they need: confirmed ownership, defined location with GPS, and a verifiable parcel. We work with HDFC ERGO, ICICI Lombard, Bajaj Allianz, SBI General, New India Assurance, and United India — 6 insurers competing for your premium. Most policies start under ₹100/month for fire+flood+storm cover up to ₹5L.',
+  outcome:
+    'Your home is finally protected against disasters that used to mean permanent financial loss.',
+
+  featuresHeading: 'What\'s covered',
+  featuresHeadingHi: 'क्या-क्या कवर है',
+  features: [
+    {
+      icon: Flame,
+      title: 'Fire and explosion',
+      titleHi: 'आग और विस्फोट',
+      body: 'Damage from fire, electrical shorts, gas cylinder explosions, and lightning. Includes contents (furniture, electronics) where opted.',
+    },
+    {
+      icon: CloudRain,
+      title: 'Flood and storm',
+      titleHi: 'बाढ़ और तूफ़ान',
+      body: 'Floods (rivers, monsoon), cyclones, hailstorms, and lightning damage. Critical in flood-prone UP, Bihar, AP, and coastal states.',
+    },
+    {
+      icon: ShieldCheck,
+      title: 'Theft and burglary',
+      titleHi: 'चोरी और डकैती',
+      body: 'Loss of contents from break-in or theft. Police FIR required for claim. Add-on covers extends to outbuildings and animal sheds.',
+    },
+  ],
+
+  stepsHeading: 'How to get insured',
+  stepsHeadingHi: 'बीमा कैसे लें',
+  steps: [
+    {
+      title: 'Share Gharauni + property details',
+      titleHi: 'जानकारी दें',
+      body: 'Card ID, construction type (pucca/kachha/mixed), area, year built. 2 minutes online or via WhatsApp.',
+    },
+    {
+      title: 'Compare 6 insurers',
+      titleHi: 'किसके साथ?',
+      body: 'We pull quotes from HDFC ERGO, ICICI Lombard, Bajaj Allianz, SBI General, New India Assurance, United India. Side-by-side coverage and premiums.',
+    },
+    {
+      title: 'Pay premium, policy issued',
+      titleHi: 'पालिसी जारी',
+      body: 'UPI or card. Policy document by email + WhatsApp within 24 hours. Cover starts immediately.',
+    },
+  ],
+
+  faq: [
+    {
+      q: 'What does a typical premium cost?',
+      qHi: 'प्रीमियम कितना होगा?',
+      a: 'For a 200-sq-yd pucca house with ₹5L sum insured (building+contents): roughly ₹1,200-1,800/year. Kachha houses cost less but cover is also more limited. Flood-prone districts have a 15-30% surcharge.',
+    },
+    {
+      q: 'What\'s NOT covered?',
+      qHi: 'क्या क्या cover नहीं है?',
+      a: 'Standard exclusions: war, riots (in some policies), wear-and-tear, intentional damage, agricultural land/crops (those need crop insurance), and damage to non-permanent structures like temporary sheds without optional add-on. We list exact exclusions per insurer on the quotes page.',
+    },
+    {
+      q: 'How fast are claims paid?',
+      qHi: 'क्लेम कितनी देर में मिलता है?',
+      a: 'After a verified incident: 15-30 days for straightforward claims under ₹1 lakh. Larger or complex claims take 45-60 days. Sub-claim emergency advances (up to 25% of claim) typically released in 7 days.',
+    },
+    {
+      q: 'Can I insure a kachha (mud/thatch) house?',
+      qHi: 'क्या कच्चे घर का बीमा होगा?',
+      a: 'Yes, but with limited cover. Pure kachha houses can be insured for fire + theft, but flood cover is usually unavailable. Mixed (pucca walls + thatched roof) houses get broader cover.',
+    },
+    {
+      q: 'Do you charge a fee?',
+      qHi: 'आप शुल्क लेते हैं?',
+      a: 'Zero. We earn a small commission from the insurer when you buy through us — it doesn\'t increase your premium. Comparison and quotes are 100% free.',
+    },
+  ],
+
+  finalHeadline: 'One flood. One fire. One total loss.',
+  finalHeadlineHi: 'एक हादसा — सब कुछ बचाने का जरिया।',
+  finalBody: 'A ₹100/month policy can mean the difference between recovering in 30 days vs 30 years.',
+  finalCTA: { label: 'Get quotes for your home →', href: '/insurance/quote' },
+};
 
 export default function InsurancePage() {
-  const [plan, setPlan] = useState('Standard');
-  const [form, setForm] = useState({ name: '', phone: '', village: '' });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validatePhone(form.phone)) {
-      alert('सही मोबाइल नंबर डालें');
-      return;
-    }
-    setLoading(true);
-    await submitLead({
-      intent: 'insurance',
-      ...form,
-      message: `Plan: ${plan}`,
-      source: 'insurance',
-      createdAt: new Date().toISOString()
-    });
-    setLoading(false);
-    setSubmitted(true);
-  };
-
-  return (
-    <>
-      <Nav />
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mono text-xs text-terracotta-600 tracking-widest mb-3">TIER 3 · INSURANCE</div>
-          <div className="grid lg:grid-cols-[1fr_auto] gap-8 items-start mb-4">
-            <h1 className="display text-4xl sm:text-5xl m-0 leading-tight">ग्रामीण संपत्ति बीमा · Rural Property Insurance</h1>
-            <Umbrella size={56} className="text-terracotta-600 hidden lg:block" />
-          </div>
-          <p className="text-lg text-ink-700 mb-10 leading-relaxed max-w-3xl">
-            आग, चोरी, बाढ़, संरचनात्मक क्षति। घर + फ़सल + पशुधन का संयुक्त कवर। गाँवों के लिए बना, गाँवों की कीमत पर।
-          </p>
-
-          {/* PLAN GRID */}
-          <div className="grid sm:grid-cols-3 gap-5 mb-10">
-            {PLANS.map(p => (
-              <button
-                key={p.name}
-                onClick={() => setPlan(p.name)}
-                className={`text-left p-6 border-[1.5px] transition relative ${
-                  plan === p.name
-                    ? 'border-terracotta-600 bg-ivory-50 shadow-lg'
-                    : 'border-ivory-200 bg-ivory-50 hover:border-terracotta-500'
-                }`}
-              >
-                {p.badge && (
-                  <div className="absolute -top-3 left-6 bg-amber-300 text-ink-900 px-2.5 py-0.5 text-[11px] mono uppercase tracking-wider font-semibold">
-                    {p.badge}
-                  </div>
-                )}
-                <div className="w-10 h-10 rounded-full mb-4" style={{ background: p.color }} />
-                <div className="display text-2xl mb-1">{p.name}</div>
-                <div className="text-[13px] text-ink-700 mb-4">{p.desc}</div>
-                <div className="display text-3xl text-terracotta-600">{p.premium}</div>
-                <div className="mono text-xs text-ink-500 mt-1">Cover {p.cover}</div>
-              </button>
-            ))}
-          </div>
-
-          {/* QUOTE FORM */}
-          {!submitted ? (
-            <form onSubmit={onSubmit} className="bg-ink-900 text-ivory-50 p-8 grid lg:grid-cols-[1fr_1fr_auto] gap-4 items-end">
-              <div>
-                <label className="mono text-[11px] text-ink-400 tracking-wider block mb-1.5">Name</label>
-                <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="input-base !bg-ink-800 !border-ink-700 !text-ivory-50" />
-              </div>
-              <div>
-                <label className="mono text-[11px] text-ink-400 tracking-wider block mb-1.5">Mobile</label>
-                <input required type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="input-base !bg-ink-800 !border-ink-700 !text-ivory-50" />
-              </div>
-              <button type="submit" disabled={loading} className="bg-amber-300 text-ink-900 px-6 py-3.5 font-semibold inline-flex items-center justify-center gap-2 disabled:opacity-60 whitespace-nowrap">
-                {loading ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : <>Get Quote (60s) <ArrowRight size={16} /></>}
-              </button>
-            </form>
-          ) : (
-            <div className="bg-ivory-100 p-8 text-center">
-              <CheckCircle2 size={48} className="text-accent-green mx-auto mb-3" />
-              <div className="display text-2xl mb-2">Quote being prepared</div>
-              <p className="text-ink-700">We’ll SMS you the exact premium for {plan} plan within 60 seconds.</p>
-            </div>
-          )}
-
-          <div className="mt-10 grid sm:grid-cols-4 gap-4 text-center">
-            {[
-              { v: '₹120', l: 'starting premium/mo' },
-              { v: '14 days', l: 'avg claim settlement' },
-              { v: '4', l: 'partner insurers' },
-              { v: '99.2%', l: 'claim approval rate' }
-            ].map((s, i) => (
-              <div key={i} className="p-4 bg-ivory-50 border border-ivory-200">
-                <div className="display text-2xl text-terracotta-600">{s.v}</div>
-                <div className="text-xs text-ink-500 mt-1">{s.l}</div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 text-sm text-ink-500">
-            Partner network: ICICI Lombard · HDFC Ergo · SBI General · Bajaj Allianz
-          </div>
-        </div>
-      </section>
-      <Footer />
-    </>
-  );
+  return <TierPage config={config} />;
 }
