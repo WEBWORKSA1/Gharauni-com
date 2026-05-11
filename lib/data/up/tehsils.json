@@ -1,317 +1,74 @@
 [
-  {
-    "name": "Meerut",
-    "nameHi": "मेरठ",
-    "districtSlug": "meerut",
-    "district": "Meerut",
-    "districtCode": "09-09"
-  },
-  {
-    "name": "Mawana",
-    "nameHi": "मवाना",
-    "districtSlug": "meerut",
-    "district": "Meerut",
-    "districtCode": "09-09"
-  },
-  {
-    "name": "Sardhana",
-    "nameHi": "सरधना",
-    "districtSlug": "meerut",
-    "district": "Meerut",
-    "districtCode": "09-09"
-  },
-  {
-    "name": "Lucknow",
-    "nameHi": "लखनऊ",
-    "districtSlug": "lucknow",
-    "district": "Lucknow",
-    "districtCode": "09-31"
-  },
-  {
-    "name": "Mohanlalganj",
-    "nameHi": "मोहनलालगंज",
-    "districtSlug": "lucknow",
-    "district": "Lucknow",
-    "districtCode": "09-31"
-  },
-  {
-    "name": "Malihabad",
-    "nameHi": "मलिहाबाद",
-    "districtSlug": "lucknow",
-    "district": "Lucknow",
-    "districtCode": "09-31"
-  },
-  {
-    "name": "Bakshi Ka Talab",
-    "nameHi": "बक्शी का तालाब",
-    "districtSlug": "lucknow",
-    "district": "Lucknow",
-    "districtCode": "09-31"
-  },
-  {
-    "name": "Gorakhpur Sadar",
-    "nameHi": "गोरखपुर सदर",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Sahjanwa",
-    "nameHi": "सहजनवा",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Khajni",
-    "nameHi": "खजनी",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Bansgaon",
-    "nameHi": "बांसगांव",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Chauri Chaura",
-    "nameHi": "चौरी चौरा",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Gola",
-    "nameHi": "गोला",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Campierganj",
-    "nameHi": "कैम्पियरगंज",
-    "districtSlug": "gorakhpur",
-    "district": "Gorakhpur",
-    "districtCode": "09-51"
-  },
-  {
-    "name": "Sadar",
-    "nameHi": "सदर",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Bilhaur",
-    "nameHi": "बिल्हौर",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Ghatampur",
-    "nameHi": "घाटमपुर",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Narwal",
-    "nameHi": "नरवल",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Kanpur Sadar (City)",
-    "nameHi": "कानपुर सदर (शहर)",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Akbarpur Maati (Adjunct)",
-    "nameHi": "अकबरपुर माटी",
-    "districtSlug": "kanpur-nagar",
-    "district": "Kanpur Nagar",
-    "districtCode": "09-38"
-  },
-  {
-    "name": "Sadar",
-    "nameHi": "सदर",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Bara",
-    "nameHi": "बारा",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Handia",
-    "nameHi": "हण्डिया",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Karchhana",
-    "nameHi": "करछना",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Koraon",
-    "nameHi": "कोरांव",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Meja",
-    "nameHi": "मेजा",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Phulpur",
-    "nameHi": "फूलपुर",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Soraon",
-    "nameHi": "सोरांव",
-    "districtSlug": "prayagraj",
-    "district": "Prayagraj",
-    "districtCode": "09-65"
-  },
-  {
-    "name": "Behat",
-    "nameHi": "बेहट",
-    "districtSlug": "saharanpur",
-    "district": "Saharanpur",
-    "districtCode": "09-01"
-  },
-  {
-    "name": "Saharanpur",
-    "nameHi": "सहारनपुर",
-    "districtSlug": "saharanpur",
-    "district": "Saharanpur",
-    "districtCode": "09-01"
-  },
-  {
-    "name": "Nakur",
-    "nameHi": "नकुड़",
-    "districtSlug": "saharanpur",
-    "district": "Saharanpur",
-    "districtCode": "09-01"
-  },
-  {
-    "name": "Rampur Maniharan",
-    "nameHi": "रामपुर मनिहारान",
-    "districtSlug": "saharanpur",
-    "district": "Saharanpur",
-    "districtCode": "09-01"
-  },
-  {
-    "name": "Deoband",
-    "nameHi": "देवबंद",
-    "districtSlug": "saharanpur",
-    "district": "Saharanpur",
-    "districtCode": "09-01"
-  },
-  {
-    "name": "Shamli",
-    "nameHi": "शामली",
-    "districtSlug": "shamli",
-    "district": "Shamli",
-    "districtCode": "09-02"
-  },
-  {
-    "name": "Kairana",
-    "nameHi": "कैराना",
-    "districtSlug": "shamli",
-    "district": "Shamli",
-    "districtCode": "09-02"
-  },
-  {
-    "name": "Unn",
-    "nameHi": "ऊन",
-    "districtSlug": "shamli",
-    "district": "Shamli",
-    "districtCode": "09-02"
-  },
-  {
-    "name": "Sadar (Muzaffarnagar)",
-    "nameHi": "सदर (मुज़फ़्फ़रनगर)",
-    "districtSlug": "muzaffarnagar",
-    "district": "Muzaffarnagar",
-    "districtCode": "09-03"
-  },
-  {
-    "name": "Budhana",
-    "nameHi": "बुढ़ाना",
-    "districtSlug": "muzaffarnagar",
-    "district": "Muzaffarnagar",
-    "districtCode": "09-03"
-  },
-  {
-    "name": "Jansath",
-    "nameHi": "जानसठ",
-    "districtSlug": "muzaffarnagar",
-    "district": "Muzaffarnagar",
-    "districtCode": "09-03"
-  },
-  {
-    "name": "Khatauli",
-    "nameHi": "खतौली",
-    "districtSlug": "muzaffarnagar",
-    "district": "Muzaffarnagar",
-    "districtCode": "09-03"
-  },
-  {
-    "name": "Bijnor",
-    "nameHi": "बिजनौर",
-    "districtSlug": "bijnor",
-    "district": "Bijnor",
-    "districtCode": "09-04"
-  },
-  {
-    "name": "Najibabad",
-    "nameHi": "नजीबाबाद",
-    "districtSlug": "bijnor",
-    "district": "Bijnor",
-    "districtCode": "09-04"
-  },
-  {
-    "name": "Nagina",
-    "nameHi": "नगीना",
-    "districtSlug": "bijnor",
-    "district": "Bijnor",
-    "districtCode": "09-04"
-  },
-  {
-    "name": "Dhampur",
-    "nameHi": "धामपुर",
-    "districtSlug": "bijnor",
-    "district": "Bijnor",
-    "districtCode": "09-04"
-  },
-  {
-    "name": "Chandpur",
-    "nameHi": "चांदपुर",
-    "districtSlug": "bijnor",
-    "district": "Bijnor",
-    "districtCode": "09-04"
-  }
+  { "name": "Meerut", "nameHi": "मेरठ", "districtSlug": "meerut", "district": "Meerut", "districtCode": "09-09" },
+  { "name": "Mawana", "nameHi": "मवाना", "districtSlug": "meerut", "district": "Meerut", "districtCode": "09-09" },
+  { "name": "Sardhana", "nameHi": "सरधना", "districtSlug": "meerut", "district": "Meerut", "districtCode": "09-09" },
+  { "name": "Lucknow", "nameHi": "लखनऊ", "districtSlug": "lucknow", "district": "Lucknow", "districtCode": "09-31" },
+  { "name": "Mohanlalganj", "nameHi": "मोहनलालगंज", "districtSlug": "lucknow", "district": "Lucknow", "districtCode": "09-31" },
+  { "name": "Malihabad", "nameHi": "मलिहाबाद", "districtSlug": "lucknow", "district": "Lucknow", "districtCode": "09-31" },
+  { "name": "Bakshi Ka Talab", "nameHi": "बक्शी का तालाब", "districtSlug": "lucknow", "district": "Lucknow", "districtCode": "09-31" },
+  { "name": "Gorakhpur Sadar", "nameHi": "गोरखपुर सदर", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Sahjanwa", "nameHi": "सहजनवा", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Khajni", "nameHi": "खजनी", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Bansgaon", "nameHi": "बांसगांव", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Chauri Chaura", "nameHi": "चौरी चौरा", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Gola", "nameHi": "गोला", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Campierganj", "nameHi": "कैम्पियरगंज", "districtSlug": "gorakhpur", "district": "Gorakhpur", "districtCode": "09-51" },
+  { "name": "Sadar", "nameHi": "सदर", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Bilhaur", "nameHi": "बिल्हौर", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Ghatampur", "nameHi": "घाटमपुर", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Narwal", "nameHi": "नरवल", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Kanpur Sadar (City)", "nameHi": "कानपुर सदर (शहर)", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Akbarpur Maati", "nameHi": "अकबरपुर माटी", "districtSlug": "kanpur-nagar", "district": "Kanpur Nagar", "districtCode": "09-38" },
+  { "name": "Sadar", "nameHi": "सदर", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Bara", "nameHi": "बारा", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Handia", "nameHi": "हण्डिया", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Karchhana", "nameHi": "करछना", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Koraon", "nameHi": "कोरांव", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Meja", "nameHi": "मेजा", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Phulpur", "nameHi": "फूलपुर", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Soraon", "nameHi": "सोरांव", "districtSlug": "prayagraj", "district": "Prayagraj", "districtCode": "09-65" },
+  { "name": "Behat", "nameHi": "बेहट", "districtSlug": "saharanpur", "district": "Saharanpur", "districtCode": "09-01" },
+  { "name": "Saharanpur", "nameHi": "सहारनपुर", "districtSlug": "saharanpur", "district": "Saharanpur", "districtCode": "09-01" },
+  { "name": "Nakur", "nameHi": "नकुड़", "districtSlug": "saharanpur", "district": "Saharanpur", "districtCode": "09-01" },
+  { "name": "Rampur Maniharan", "nameHi": "रामपुर मनिहारान", "districtSlug": "saharanpur", "district": "Saharanpur", "districtCode": "09-01" },
+  { "name": "Deoband", "nameHi": "देवबंद", "districtSlug": "saharanpur", "district": "Saharanpur", "districtCode": "09-01" },
+  { "name": "Shamli", "nameHi": "शामली", "districtSlug": "shamli", "district": "Shamli", "districtCode": "09-02" },
+  { "name": "Kairana", "nameHi": "कैराना", "districtSlug": "shamli", "district": "Shamli", "districtCode": "09-02" },
+  { "name": "Unn", "nameHi": "ऊन", "districtSlug": "shamli", "district": "Shamli", "districtCode": "09-02" },
+  { "name": "Sadar", "nameHi": "सदर", "districtSlug": "muzaffarnagar", "district": "Muzaffarnagar", "districtCode": "09-03" },
+  { "name": "Budhana", "nameHi": "बुढ़ाना", "districtSlug": "muzaffarnagar", "district": "Muzaffarnagar", "districtCode": "09-03" },
+  { "name": "Jansath", "nameHi": "जानसठ", "districtSlug": "muzaffarnagar", "district": "Muzaffarnagar", "districtCode": "09-03" },
+  { "name": "Khatauli", "nameHi": "खतौली", "districtSlug": "muzaffarnagar", "district": "Muzaffarnagar", "districtCode": "09-03" },
+  { "name": "Bijnor", "nameHi": "बिजनौर", "districtSlug": "bijnor", "district": "Bijnor", "districtCode": "09-04" },
+  { "name": "Najibabad", "nameHi": "नजीबाबाद", "districtSlug": "bijnor", "district": "Bijnor", "districtCode": "09-04" },
+  { "name": "Nagina", "nameHi": "नगीना", "districtSlug": "bijnor", "district": "Bijnor", "districtCode": "09-04" },
+  { "name": "Dhampur", "nameHi": "धामपुर", "districtSlug": "bijnor", "district": "Bijnor", "districtCode": "09-04" },
+  { "name": "Chandpur", "nameHi": "चांदपुर", "districtSlug": "bijnor", "district": "Bijnor", "districtCode": "09-04" },
+  { "name": "Agra", "nameHi": "आगरा", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Etmadpur", "nameHi": "एत्मादपुर", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Kiraoli", "nameHi": "किरावली", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Kheragarh", "nameHi": "खेरागढ़", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Fatehabad", "nameHi": "फतेहाबाद", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Bah", "nameHi": "बाह", "districtSlug": "agra", "district": "Agra", "districtCode": "09-19" },
+  { "name": "Atrauli", "nameHi": "अतरौली", "districtSlug": "aligarh", "district": "Aligarh", "districtCode": "09-15" },
+  { "name": "Iglas", "nameHi": "इगलास", "districtSlug": "aligarh", "district": "Aligarh", "districtCode": "09-15" },
+  { "name": "Koil", "nameHi": "कोइल", "districtSlug": "aligarh", "district": "Aligarh", "districtCode": "09-15" },
+  { "name": "Khair", "nameHi": "खैर", "districtSlug": "aligarh", "district": "Aligarh", "districtCode": "09-15" },
+  { "name": "Gabhana", "nameHi": "गभाना", "districtSlug": "aligarh", "district": "Aligarh", "districtCode": "09-15" },
+  { "name": "Akbarpur", "nameHi": "अकबरपुर", "districtSlug": "ambedkar-nagar", "district": "Ambedkar Nagar", "districtCode": "09-40" },
+  { "name": "Alapur", "nameHi": "अलापुर", "districtSlug": "ambedkar-nagar", "district": "Ambedkar Nagar", "districtCode": "09-40" },
+  { "name": "Jalalpur", "nameHi": "जलालपुर", "districtSlug": "ambedkar-nagar", "district": "Ambedkar Nagar", "districtCode": "09-40" },
+  { "name": "Tanda", "nameHi": "टांडा", "districtSlug": "ambedkar-nagar", "district": "Ambedkar Nagar", "districtCode": "09-40" },
+  { "name": "Bhiti", "nameHi": "भीटी", "districtSlug": "ambedkar-nagar", "district": "Ambedkar Nagar", "districtCode": "09-40" },
+  { "name": "Amethi", "nameHi": "अमेठी", "districtSlug": "amethi", "district": "Amethi", "districtCode": "09-43" },
+  { "name": "Gauriganj", "nameHi": "गौरीगंज", "districtSlug": "amethi", "district": "Amethi", "districtCode": "09-43" },
+  { "name": "Tiloi", "nameHi": "तिलोई", "districtSlug": "amethi", "district": "Amethi", "districtCode": "09-43" },
+  { "name": "Musafirkhana", "nameHi": "मुसाफिरखाना", "districtSlug": "amethi", "district": "Amethi", "districtCode": "09-43" },
+  { "name": "Amroha", "nameHi": "अमरोहा", "districtSlug": "amroha", "district": "Amroha", "districtCode": "09-08" },
+  { "name": "Dhanaura", "nameHi": "धनौरा", "districtSlug": "amroha", "district": "Amroha", "districtCode": "09-08" },
+  { "name": "Naugawan Sadat", "nameHi": "नौगांवा सादात", "districtSlug": "amroha", "district": "Amroha", "districtCode": "09-08" },
+  { "name": "Hasanpur", "nameHi": "हसनपुर", "districtSlug": "amroha", "district": "Amroha", "districtCode": "09-08" },
+  { "name": "Ajitmal", "nameHi": "अजीतमल", "districtSlug": "auraiya", "district": "Auraiya", "districtCode": "09-36" },
+  { "name": "Auraiya", "nameHi": "औरैया", "districtSlug": "auraiya", "district": "Auraiya", "districtCode": "09-36" },
+  { "name": "Bidhuna", "nameHi": "बिधूना", "districtSlug": "auraiya", "district": "Auraiya", "districtCode": "09-36" }
 ]
